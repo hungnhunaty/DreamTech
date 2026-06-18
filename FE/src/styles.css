@@ -1,0 +1,9 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "tailwindcss";
+@layer base {
+  :root {
+    /* Khai báo cho trình duyệt biết trang web hỗ trợ cả giao diện Sáng và Tối */
+    color-scheme: light dark;
+  }
+}
