@@ -31,7 +31,7 @@ namespace BE.Model
 
         public string Avatar { get; set; } = string.Empty;
 
-        public int Role { get; set; }
+        public string Role { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

@@ -1,0 +1,74 @@
+<div class="bg-[#09090f] min-h-screen flex items-center justify-center p-4">
+    <div class="relative w-full max-w-md">
+        
+        <div class="absolute inset-0 rounded-2xl animate-glow blur-xl" style="background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);"></div>
+
+        <div class="relative bg-[#111118] border border-slate-800 rounded-2xl p-8 shadow-2xl shadow-[#00d4ff]/10">
+            
+            <div class="text-center mb-8">
+                <div class="inline-flex w-fit items-center gap-2 bg-[#00d4ff]/10 border border-[#00d4ff]/20 rounded-full px-4 py-1.5 mb-4">
+                    <img src="user1.png" class="w-10">
+                    <span class="text-[#00d4ff] text-xs font-bold tracking-wider">
+                        THÀNH VIÊN MỚI
+                    </span>
+                </div>
+                <h2 class="text-3xl text-white font-bold tracking-tight mb-2">Tạo Tài Khoản</h2>
+                <p class="text-[#8888aa] text-sm">Tham gia trở thành khách hàng của DreamTech</p>
+            </div>
+
+            <form class="space-y-4">
+                <div>
+                    <label class="block text-[#8888aa] text-xs font-semibold mb-1.5 ml-1">Họ và tên</label>
+                    <input type="text" placeholder="Nguyễn Văn A" 
+                        class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder:text-slate-600">
+                </div>
+                
+                <div>
+                    <label class="block text-[#8888aa] text-xs font-semibold mb-1.5 ml-1">Tên tài khoản</label>
+                    <input type="text" placeholder="Tên tài khoản không được có khoảng trắng" 
+                        class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder:text-slate-600">
+                </div>
+
+                <div>
+                    <label class="block text-[#8888aa] text-xs font-semibold mb-1.5 ml-1">Mật khẩu</label>
+                    <div class="relative">
+                        <input type="password" placeholder="Tạo mật khẩu (ít nhất 8 ký tự)" 
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder:text-slate-600">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[#8888aa] text-xs font-semibold mb-1.5 ml-1">Địa chỉ (tùy chọn)</label>
+                    <div class="relative">
+                        <input type="text" placeholder="123 Bùi Thị Xuân, Phường 2..." 
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder:text-slate-600">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[#8888aa] text-xs font-semibold mb-1.5 ml-1">Số điện thoại (bắt buộc)</label>
+                    <div class="relative">
+                        <input type="text" placeholder="0923874532" 
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder:text-slate-600">
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-2 pt-2">
+                    <input type="checkbox" id="terms" class="mt-1 w-4 h-4 rounded border-slate-700 text-[#00d4ff] focus:ring-[#00d4ff]/50 bg-[#09090f] cursor-pointer">
+                    <label for="terms" class="text-xs text-[#8888aa] leading-tight">
+                        Tôi đồng ý với <span class="text-[#00d4ff]">Điều khoản dịch vụ</span> và <span class="text-[#00d4ff]">Chính sách bảo mật</span> của DreamTech.
+                    </label>
+                </div>
+
+                <button type="submit" class="w-full mt-6 bg-[#00d4ff] text-[#09090f] font-bold px-6 py-3.5 rounded-xl hover:bg-[#00d4ff]/90 transition-all shadow-lg shadow-[#00d4ff]/20">
+                    Tạo Tài Khoản Mới
+                </button>
+            </form>
+
+            <p class="text-center text-sm text-[#8888aa] mt-8">
+                Đã có tài khoản? 
+                <a routerLink="/login" class="text-[#00d4ff] font-semibold hover:underline">Đăng nhập ngay</a>
+            </p>
+        </div>
+    </div>
+</div>

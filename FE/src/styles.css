@@ -2,8 +2,21 @@
 
 @import "tailwindcss";
 @layer base {
-  :root {
-    /* Khai báo cho trình duyệt biết trang web hỗ trợ cả giao diện Sáng và Tối */
-    color-scheme: light dark;
-  }
+
+}
+@theme{
+    --animate-glow: glow 3s ease-in-out infinite;
+
+    @keyframes glow{
+        0%, 100%{
+            box-shadow:
+                0 0 10px rgba(0,212,255,.15),
+                0 0 15px rgba(0,212,255,.08);
+        }
+        50%{
+            box-shadow:
+                0 0 20px rgba(0,212,255,.4),
+                0 0 40px rgba(0,212,255,.2);
+        }
+    }
 }

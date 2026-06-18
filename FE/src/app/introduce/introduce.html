@@ -1,34 +1,209 @@
-<div
-  #container
-  class="relative w-full max-w-4xl h-[500px] overflow-hidden rounded-3xl"
-  (mousemove)="onMove($event)"
-  (mouseup)="dragging = false"
-  (mouseleave)="dragging = false"
->
-  <img src="light.png" class="w-full h-full object-cover" />
 
-  <div
-    class="absolute inset-0 overflow-hidden"
-    [style.width.%]="position"
-  >
-    <img
-      src="dark.png"
-      class="absolute inset-0 w-full h-full object-cover"
-    />
-  </div>
+<div class="bg-[#09090f] min-h-screen">
+<div class=" flex justify-center">
+    <div class="md:w-2/3 grid md:grid-cols-2 gap-20 items-center px-4 md:py-16">
+        <div>
+            <div class="inline-flex w-fit items-center gap-2 bg-[#00d4ff]/10 border border-[#00d4ff]/20 rounded-full px-4 py-1.5 mb-6">
+            <img src="electric.png" class="md:w-5" >
+            <span class="text-[#00d4ff] text-xs font-bold flex items-center gap-3">
+                CÔNG NGHỆ ĐỈNH CAO
+            </span>
+            </div>
 
-  <div
-    class="absolute top-0 bottom-0 w-1 bg-cyan-400"
-    [style.left.%]="position"
-  >
-    <button
-      (mousedown)="dragging = true"
-      class="absolute top-1/2 left-1/2
-             -translate-x-1/2 -translate-y-1/2
-             w-12 h-12 rounded-full bg-sky-500
-             text-white shadow-xl"
-    >
-      ↔
-    </button>
-  </div>
+        <h1 class="text-5xl text-white md:text-6xl font-bold leading-none mb-4 tracking-tight"> 
+            Nâng Tầm 
+            <span class="block" style="color: rgb(0, 212, 255); text-shadow: rgba(0, 212, 255, 0.533) 0px 0px 40px;">
+                Trải Nghiệm Số
+            </span>
+        </h1>
+        <p class="text-[#8888aa] text-base leading-relaxed mb-8 max-w-md">Khám phá hàng nghìn sản phẩm công nghệ chính hãng — laptop, PC, điện thoại, phụ kiện gaming. Bảo hành toàn diện, giao hàng toàn quốc.</p>
+        
+        <div class="flex flex-wrap gap-3">
+            <button
+                class="flex items-center gap-2 bg-[#00d4ff] text-[#09090f] font-bold px-6 py-3 rounded-xl hover:bg-[#00d4ff]/90 transition-colors shadow-lg shadow-[#00d4ff]/20">Mua Ngay &rarr;
+            </button>
+            <button
+                class="flex items-center gap-2 border border-slate-800 text-[#8888aa] font-medium px-6 py-3 rounded-xl hover:border-[#00d4ff]/40 hover:text-[#00d4ff] transition-colors">Khuyến Mãi
+                Hôm Nay
+            </button>
+            <div class="flex gap-8 mt-10 text-white">
+                <div>
+                    <p class="text-2xl font-bold text-white"
+                        style="font-family: Rajdhani, sans-serif;">150K+</p>
+                    <p class="text-xs text-[#8888aa]">Sản phẩm</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-white"
+                        style="font-family: Rajdhani, sans-serif;">2M+</p>
+                    <p class="text-xs text-[#8888aa]">Khách hàng</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-white"
+                        style="font-family: Rajdhani, sans-serif;">99%</p>
+                    <p class="text-xs text-[#8888aa]">Hài lòng</p>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 py-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-[#00d4ff]/10 flex items-center justify-center shrink-0">
+                        <img src="truck.png" class="w-[80%]">
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-white leading-tight">
+                            Freeship toàn quốc
+                        </p>
+                        <p class="text-xs text-[#8888aa]">
+                            Đơn từ 500K
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-[#00d4ff]/10 flex items-center justify-center shrink-0">
+                        <img src="shield.png" class="w-[80%]">
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-white leading-tight">
+                            Bảo hành chính hãng
+                        </p>
+                        <p class="text-xs text-[#8888aa]">
+                            12–24 tháng
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-[#00d4ff]/10 flex items-center justify-center shrink-0">
+                        <img src="electric.png" class="w-[80%]">    
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-white leading-tight">
+                            Giao hàng nhanh
+                        </p>
+                        <p class="text-xs text-[#8888aa]">
+                            Trong 2 giờ HCM &amp; HN
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-[#00d4ff]/10 flex items-center justify-center shrink-0">
+                        <img src="price.png" class="w-[80%]">    
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-white leading-tight">
+                            Giá tốt nhất</p>
+                        <p class="text-xs text-[#8888aa]">Cam kết hoàn tiền</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <div class="relative w-full max-w-sm ml-32">
+            <div class="absolute inset-0 rounded-2xl animate-glow" style="background: radial-gradient(circle, rgba(0, 212, 255, 0.094) 0%, transparent 70%);"></div><img
+                src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&amp;h=420&amp;fit=crop&amp;auto=format"
+                class="w-full rounded-2xl glow-border border border-[#00d4ff]/20 object-cover"
+                style="height: 320px;">
+            <div class="absolute -bottom-4 -left-4 bg-gray-950/90 border border-slate-800 rounded-xl p-3 shadow-xl">
+                    <p class="text-[10px] text-[#8888aa] mb-0.5">
+                        Giá tốt nhất hôm nay
+                    </p>
+                    <p class="text-lg font-bold text-[#00d4ff]"
+                    style="font-family: Rajdhani, sans-serif;">94.990.000₫
+                    </p>
+            </div>
+            <div class="absolute -top-3 -right-3 bg-[#ff3d5a] text-white text-xs font-bold px-3 py-1 rounded-full">-8%</div>
+        </div>
+    </div> 
 </div>
+
+
+<div class="bg-[#09090f] text-white mb-32">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-1 h-7 bg-[#a78bfa] rounded-full"></div>
+            <h2 class="text-2xl font-bold" style="font-family: Rajdhani, sans-serif;">DANH MỤC SẢN PHẨM</h2>
+        </div>
+        <div class="grid grid-cols-4 md:grid-cols-8 gap-3">
+            <button class="flex flex-col items-center gap-2.5 p-3 rounded-xl bg-[#111118] border border-slate-800
+                                hover:border-[#00d4ff]/40 hover:bg-[#1e1e30] hover:cursor-pointer transition-all duration-200 group">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
+                    style="background: rgba(0, 212, 255, 0.094);">
+                    <img src="laptop.png" class="w-[90%]">    
+                </div>
+                <span
+                    class="text-[11px] font-medium text-[#8888aa] group-hover:text-white transition-colors text-center leading-tight">Laptop</span>
+            </button>
+            <button class="flex flex-col items-center gap-2.5 p-3 rounded-xl hover:cursor-pointer bg-[#111118] border border-slate-800
+                                  hover:border-[#00d4ff]/40 hover:bg-[#1e1e30] transition-all duration-200 group">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
+                    style="background: rgba(167, 139, 250, 0.094);">
+                    <img src="mobile-phone.png" class="w-[80%]">    
+                </div>
+                <span
+                    class="text-[11px] font-medium text-[#8888aa] group-hover:text-white transition-colors text-center leading-tight">Điện
+                    Thoại</span>
+            </button>
+            <button class="flex flex-col items-center gap-2.5 p-3 rounded-xl hover:cursor-pointer bg-[#111118] border border-slate-800
+                                  hover:border-[#00d4ff]/40 hover:bg-[#1e1e30] transition-all duration-200 group">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
+                    style="background: rgba(52, 211, 153, 0.094);">
+                    <img src="cpu.png" class="w-[80%]">    
+                </div>
+                <span
+                    class="text-[11px] font-medium text-[#8888aa] group-hover:text-white transition-colors text-center leading-tight">PC
+                    &amp; CPU</span>
+            </button>
+            <button class="flex flex-col items-center gap-2.5 p-3 rounded-xl hover:cursor-pointer bg-[#111118] border border-slate-800
+                                  hover:border-[#00d4ff]/40 hover:bg-[#1e1e30] transition-all duration-200 group">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
+                    style="background: rgba(249, 115, 22, 0.094);">
+                    <img src="joystick.png" class="w-[90%]">    
+                </div>
+                <span
+                    class="text-[11px] font-medium text-[#8888aa] group-hover:text-white transition-colors text-center leading-tight">Gaming</span>
+            </button>
+            <button class="flex flex-col items-center gap-2.5 p-3 rounded-xl hover:cursor-pointer bg-[#111118] border border-slate-800
+                                  hover:border-[#00d4ff]/40 hover:bg-[#1e1e30] transition-all duration-200 group">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
+                    style="background: rgba(251, 113, 133, 0.094);">
+                    <img src="monitor.png" class="w-[80%]">    
+                </div>
+                <span
+                    class="text-[11px] font-medium text-[#8888aa] group-hover:text-white transition-colors text-center leading-tight">Màn
+                    Hình</span>
+            </button>
+            <button class="flex flex-col items-center gap-2.5 p-3 rounded-xl hover:cursor-pointer bg-[#111118] border border-slate-800
+                                  hover:border-[#00d4ff]/40 hover:bg-[#1e1e30] transition-all duration-200 group">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
+                    style="background: rgba(251, 191, 36, 0.094);">
+                    <img src="headphone.png" class="w-[90%]">    
+                </div>
+                <span
+                    class="text-[11px] font-medium text-[#8888aa] group-hover:text-white transition-colors text-center leading-tight">Tai
+                    Nghe</span>
+            </button>
+            <button class="flex flex-col items-center gap-2.5 p-3 rounded-xl hover:cursor-pointer bg-[#111118] border border-slate-800
+                                  hover:border-[#00d4ff]/40 hover:bg-[#1e1e30] transition-all duration-200 group">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
+                    style="background: rgba(96, 165, 250, 0.094);">
+                    <img src="tablet.png" class="w-[80%]">    
+                </div>
+                <span
+                    class="text-[11px] font-medium text-[#8888aa] group-hover:text-white transition-colors text-center leading-tight">Máy
+                    Tính Bảng</span>
+            </button>
+            <button class="flex flex-col items-center gap-2.5 p-3 rounded-xl hover:cursor-pointer bg-[#111118] border border-slate-800
+                                  hover:border-[#00d4ff]/40 hover:bg-[#1e1e30] transition-all duration-200 group">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
+                    style="background: rgba(244, 114, 182, 0.094);">
+                    <img src="voucher.png" class="w-[80%]">    
+                </div>
+                <span
+                    class="text-[11px] font-medium text-[#8888aa] group-hover:text-white transition-colors text-center leading-tight">Khuyến
+                    Mãi</span>
+            </button>
+        </div>
+    </div>
+</div>
+</div>
+
