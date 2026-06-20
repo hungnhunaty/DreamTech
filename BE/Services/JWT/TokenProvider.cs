@@ -30,7 +30,7 @@ namespace BE.Services.JWT
                     new Claim("Role", roleName)
                 }),
 
-                Expires = DateTime.UtcNow.AddMinutes(double.Parse(configuration["JWTConfig:ExpirationInMinutes"])),
+                Expires = DateTime.UtcNow.AddMinutes(double.Parse(configuration["JWTConfig:ExpirationInMinutes"] ?? "60")),
                 SigningCredentials = credentials,
                 Issuer = configuration["JWTConfig:Issuer"],
                 Audience = configuration["JWTConfig:Audience"]

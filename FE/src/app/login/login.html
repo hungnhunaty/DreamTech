@@ -1,0 +1,65 @@
+<div class="bg-[#09090f] min-h-screen flex items-center justify-center p-4">
+    <div class="relative w-full max-w-md">
+        
+        <div class="absolute inset-0 rounded-2xl animate-glow blur-xl" style="background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);"></div>
+
+        <div class="relative bg-[#111118] border border-slate-800 rounded-2xl p-8 shadow-2xl shadow-[#00d4ff]/10">
+            
+            <div class="text-center mb-8">
+                <div class="inline-flex w-fit items-center gap-2 bg-[#00d4ff]/10 border border-[#00d4ff]/20 rounded-full px-4 py-1.5 mb-4">
+                    <img src="electric.png" class="w-4"> <span class="text-[#00d4ff] text-xs font-bold tracking-wider">
+                        CHÀO MỪNG TRỞ LẠI
+                    </span>
+                </div>
+                <h2 class="text-3xl text-white font-bold tracking-tight mb-2">Đăng Nhập</h2>
+                <p class="text-[#8888aa] text-sm">Tiếp tục trải nghiệm mua sắm tại DreamTech</p>
+            </div>
+
+            <form class="space-y-5" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                
+                <div>
+                    <label class="block text-[#8888aa] text-xs font-semibold mb-1.5 ml-1">Tên tài khoản</label>
+                    <input formControlName="Username" type="text" placeholder="Nhập tên tài khoản của bạn" 
+                        class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder:text-slate-600">
+                </div>
+
+                <div>
+                    <div class="flex items-center justify-between mb-1.5 ml-1 mr-1">
+                        <label class="block text-[#8888aa] text-xs font-semibold">Mật khẩu</label>
+                    </div>
+                    <div class="relative">
+                        <input formControlName="Password" type="password" placeholder="••••••••" 
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder:text-slate-600">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-1">
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="remember" formControlName="RememberMe" class="w-4 h-4 rounded border-slate-700 text-[#00d4ff] focus:ring-[#00d4ff]/50 bg-[#09090f] cursor-pointer">
+                        <label for="remember" class="text-xs text-[#8888aa] cursor-pointer select-none">
+                            Ghi nhớ đăng nhập
+                        </label>
+                    </div>
+                    <a href="#" class="text-xs font-medium text-[#00d4ff] hover:text-[#00d4ff]/80 hover:underline transition-colors">
+                            Quên mật khẩu?
+                    </a>
+                </div>
+
+                <button type="submit" 
+                        [disabled]="loginForm.invalid"
+                        class="w-full mt-2 bg-[#00d4ff] text-[#09090f] font-bold px-6 py-3.5 rounded-xl transition-all shadow-lg shadow-[#00d4ff]/20 hover:bg-[#00d4ff]/90 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#00d4ff]">
+                    Đăng Nhập Vào Hệ Thống
+                </button>
+
+            </form>
+
+            <div class="mt-8 pt-6 border-t border-slate-800/50 text-center">
+                <p class="text-sm text-[#8888aa]">
+                    Chưa có tài khoản? 
+                    <a routerLink="/register" class="text-[#00d4ff] font-semibold hover:underline transition-all">Đăng ký ngay</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>

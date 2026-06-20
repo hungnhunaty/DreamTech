@@ -1,5 +1,6 @@
 using System.Text;
 using BE.Model;
+using BE.Services.Account;
 using BE.Services.JWT;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -43,10 +44,32 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddScoped<TokenProvider>();
+builder.Services.AddControllers();
 
+builder.Services.AddScoped<TokenProvider>();
+builder.Services.AddScoped<AccountService>();
+
+
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+using(var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var accountService = services.GetRequiredService<AccountService>();
+
+        await accountService.SeedAdmin();
+    }
+    catch(Exception ex)
+    {
+        Console.WriteLine("Error while seeding Admin: " + ex.Message);
+    }
+}
+
 
 app.UseCors("CorsPolicy");
 

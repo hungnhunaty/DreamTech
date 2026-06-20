@@ -154,3 +154,5 @@ D:\AngularLearning\DreamTech\BE\bin\Debug\net10.0\runtimes\win-x86\native\Micros
 D:\AngularLearning\DreamTech\BE\obj\Debug\net10.0\BE.csproj.AssemblyReference.cache
 D:\AngularLearning\DreamTech\BE\obj\Debug\net10.0\BE.csproj.Up2Date
 D:\AngularLearning\DreamTech\BE\obj\Debug\net10.0\BE.sourcelink.json
+D:\AngularLearning\DreamTech\BE\bin\Debug\net10.0\BCrypt.Net-Core.dll
+D:\AngularLearning\DreamTech\BE\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
