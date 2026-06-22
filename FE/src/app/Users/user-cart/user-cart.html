@@ -1,0 +1,74 @@
+<div class="space-y-6 max-w-2xl mx-auto">
+
+    <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold">Giỏ Hàng</h1>
+        <a routerLink="/user/shop" class="text-xs text-[#00d4ff] hover:underline">&larr; Tiếp tục mua</a>
+    </div>
+
+    <!-- Trống -->
+    <div *ngIf="cartItems.length === 0" class="text-center py-16 text-slate-500 text-sm">
+        Giỏ hàng đang trống.
+    </div>
+
+    <!-- Danh sách -->
+    <div *ngFor="let item of cartItems; let i = index"
+        class="flex gap-4 bg-[#111118] border border-slate-800 rounded-xl p-4">
+
+        <div class="w-16 h-16 bg-slate-950 rounded-lg flex items-center justify-center shrink-0">
+            <img [src]="item.imageUrl" class="max-h-full max-w-full object-contain p-1">
+        </div>
+
+        <div class="flex-1">
+            <h4 class="text-sm font-semibold text-white">{{item.name}}</h4>
+            <p class="text-sm text-[#00d4ff] font-bold">{{ getPrice(item) | number }}₫</p>
+
+            <div class="flex items-center gap-3 mt-2">
+                <button (click)="changeQty(i, -1)" class="w-6 h-6 bg-slate-900 border border-slate-800 rounded text-xs cursor-pointer">−</button>
+                <span class="text-sm font-bold">{{item.qty}}</span>
+                <button (click)="changeQty(i, 1)" class="w-6 h-6 bg-slate-900 border border-slate-800 rounded text-xs cursor-pointer">+</button>
+            </div>
+        </div>
+
+        <div class="flex flex-col items-end justify-between">
+            <button (click)="removeItem(i)" class="text-slate-600 hover:text-red-500 text-xs cursor-pointer">Xóa</button>
+            <span class="text-sm font-bold">{{ getPrice(item) * item.qty | number }}₫</span>
+        </div>
+    </div>
+
+    <!-- Mã Khuyến Mãi -->
+    <div *ngIf="cartItems.length > 0" class="bg-[#111118] border border-slate-800 rounded-xl p-4 space-y-3">
+        <label class="text-xs text-[#8888aa] block font-bold">Mã khuyến mãi</label>
+        <div class="flex gap-2">
+            <input type="text" [(ngModel)]="couponCode" placeholder="Nhập mã giảm giá..."
+                class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs outline-none text-white focus:border-[#00d4ff]/40">
+            <button (click)="applyCoupon()"
+                class="bg-[#00d4ff] text-[#09090f] font-bold text-xs px-4 py-2 rounded-lg cursor-pointer">
+                Áp dụng
+            </button>
+        </div>
+        <div *ngIf="appliedCoupon" class="flex justify-between items-center text-xs bg-[#00d4ff]/10 border border-[#00d4ff]/20 rounded-lg p-2 mt-2">
+            <span class="text-emerald-400">Đã áp dụng mã: <b>{{ appliedCoupon.code }}</b></span>
+            <button (click)="removeCoupon()" class="text-red-400 hover:underline cursor-pointer font-bold">Xóa</button>
+        </div>
+    </div>
+
+    <!-- Tổng -->
+    <div *ngIf="cartItems.length > 0" class="bg-[#111118] border border-slate-800 rounded-xl p-4 space-y-4">
+        <div class="flex justify-between text-sm">
+            <span class="text-slate-400">Tạm tính</span>
+            <span class="text-white">{{ getSubtotal() | number }}₫</span>
+        </div>
+        <div *ngIf="discountAmount > 0" class="flex justify-between text-sm">
+            <span class="text-red-400">Giảm giá</span>
+            <span class="text-red-400">-{{ discountAmount | number }}₫</span>
+        </div>
+        <div class="flex justify-between text-sm font-bold border-t border-slate-800 pt-3">
+            <span>Tổng cộng</span>
+            <span class="text-[#00d4ff] text-base">{{ getFinalTotal() | number }}₫</span>
+        </div>
+        <button (click)="goCheckout()"
+            class="w-full bg-[#00d4ff] text-[#09090f] font-bold py-3 rounded-xl cursor-pointer text-sm">
+            Thanh Toán
+        </button>
+    </div>
+</div>

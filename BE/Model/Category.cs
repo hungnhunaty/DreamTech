@@ -16,8 +16,6 @@ namespace BE.Model
 
         public string Description { get; set; } = string.Empty;
 
-        public string ImageUrl { get; set; } = string.Empty;
-
         // Navigation
         public ICollection<Product> Products { get; set; }
     }

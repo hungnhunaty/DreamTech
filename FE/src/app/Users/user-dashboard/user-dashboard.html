@@ -1,1 +1,145 @@
-<p>user-dashboard works!</p>
+<div class="space-y-6">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-white">Lịch Sử Đơn Hàng</h1>
+            <p class="text-sm text-[#8888aa]">Xem danh sách các đơn hàng bạn đã đặt tại DreamTech</p>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="orders.length === 0" class="flex flex-col items-center justify-center py-16 border border-dashed border-slate-800 rounded-2xl bg-[#111118]">
+        <div class="w-16 h-16 rounded-full bg-[#00d4ff]/10 flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-[#00d4ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+            </svg>
+        </div>
+        <p class="text-lg font-semibold text-white">Chưa có đơn hàng nào</p>
+        <p class="text-sm text-[#8888aa] mt-1 mb-6">Bạn chưa đặt bất kỳ sản phẩm nào từ DreamTech.</p>
+        <a routerLink="/user/shop" class="px-5 py-2.5 bg-[#00d4ff] hover:bg-[#00d4ff]/90 text-slate-950 font-bold rounded-xl transition-all">
+            Mua sắm ngay
+        </a>
+    </div>
+
+    <!-- Orders List -->
+    <div *ngIf="orders.length > 0" class="grid gap-4">
+        <div *ngFor="let order of orders" class="bg-[#111118] border border-slate-800 rounded-xl p-5 hover:border-slate-700 transition-all">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800/60 pb-3 mb-4">
+                <div>
+                    <span class="text-xs text-[#8888aa]">Mã đơn hàng</span>
+                    <p class="text-sm font-semibold text-white">#{{order.orderId}}</p>
+                </div>
+                <div>
+                    <span class="text-xs text-[#8888aa]">Ngày đặt</span>
+                    <p class="text-sm font-medium text-white">{{order.createdAt | date:'dd/MM/yyyy HH:mm'}}</p>
+                </div>
+                <div>
+                    <span class="text-xs text-[#8888aa]">Người nhận</span>
+                    <p class="text-sm font-medium text-white">{{order.receiverName}}</p>
+                </div>
+                <div>
+                    <span class="text-xs text-[#8888aa]">Số điện thoại</span>
+                    <p class="text-sm font-medium text-white">{{order.phone}}</p>
+                </div>
+                <div>
+                    <span class="text-xs text-[#8888aa]">Trạng thái</span>
+                    <div class="mt-0.5">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold" [ngClass]="getStatusBadgeClass(order.status)">
+                            {{getStatusText(order.status)}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <p class="text-xs text-[#8888aa]">Địa chỉ nhận hàng</p>
+                    <p class="text-sm text-slate-300">{{order.address}}</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right">
+                        <span class="text-xs text-[#8888aa]">Thanh toán ({{order.paymentMethod}})</span>
+                        <p class="text-sm font-semibold" [ngClass]="order.paymentStatus === 'Paid' ? 'text-green-400' : 'text-yellow-400'">
+                            {{order.paymentStatus === 'Paid' ? 'Đã thanh toán' : 'Chưa thanh toán'}}
+                        </p>
+                    </div>
+                    <div class="text-right border-l border-slate-800 pl-4">
+                        <span class="text-xs text-[#8888aa]">Tổng tiền</span>
+                        <p class="text-lg font-bold text-[#00d4ff]">{{order.totalAmount | number}}₫</p>
+                    </div>
+                    <div *ngIf="order.status.toLowerCase() === 'pending'" class="text-right border-l border-slate-800 pl-4">
+                        <button (click)="cancelOrder(order.orderId)" class="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg text-xs font-bold transition-all cursor-pointer">
+                            Hủy đơn
+                        </button>
+                    </div>
+                    <div *ngIf="order.status.toLowerCase() !== 'cancelled'" class="text-right border-l border-slate-800 pl-4">
+                        <button (click)="openReviewModal(order)" class="px-4 py-2 bg-[#00d4ff]/10 hover:bg-[#00d4ff]/20 text-[#00d4ff] border border-[#00d4ff]/20 rounded-lg text-xs font-bold transition-all cursor-pointer">
+                            Đánh giá
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Đánh Giá Sản Phẩm Trong Đơn Hàng -->
+    <div *ngIf="showReviewModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div class="bg-[#111118] border border-slate-800 rounded-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 relative">
+            
+            <!-- Close Button -->
+            <button (click)="closeReviewModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white cursor-pointer">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <h3 class="text-lg font-bold text-white mb-4">Đánh giá sản phẩm - Đơn hàng #{{selectedOrder?.orderId}}</h3>
+
+            <!-- Order Items List -->
+            <div class="space-y-4">
+                <p *ngIf="orderItems.length === 0" class="text-sm text-slate-500">Đang tải danh sách sản phẩm...</p>
+                
+                <div *ngFor="let item of orderItems" class="bg-slate-950/40 p-4 rounded-xl border border-slate-800 space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center shrink-0">
+                            <img [src]="item.imageUrl" class="max-h-full max-w-full object-contain p-1">
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-sm font-semibold text-white line-clamp-1">{{item.productName}}</h4>
+                            <p class="text-xs text-[#8888aa]">Số lượng: {{item.quantity}} | Đơn giá: {{item.unitPrice | number}}₫</p>
+                        </div>
+                        <button *ngIf="selectedProductToReview?.productId !== item.productId"
+                            (click)="selectProductForReview(item)"
+                            class="bg-[#00d4ff] text-[#09090f] font-bold text-xs px-3 py-1.5 rounded-lg cursor-pointer">
+                            Viết đánh giá
+                        </button>
+                    </div>
+
+                    <!-- Review Input Form for this item -->
+                    <div *ngIf="selectedProductToReview?.productId === item.productId" class="border-t border-slate-800/60 pt-3 space-y-3">
+                        <div class="flex items-center gap-3">
+                            <label class="text-xs text-[#8888aa]">Số sao:</label>
+                            <select [(ngModel)]="newRating" class="bg-slate-900 border border-slate-800 text-xs rounded p-1 text-white">
+                                <option [value]="5">5 Sao ★★★★★</option>
+                                <option [value]="4">4 Sao ★★★★</option>
+                                <option [value]="3">3 Sao ★★★</option>
+                                <option [value]="2">2 Sao ★★</option>
+                                <option [value]="1">1 Sao ★</option>
+                            </select>
+                        </div>
+                        <textarea [(ngModel)]="newComment" rows="2" placeholder="Nhập cảm nhận của bạn về sản phẩm này..."
+                            class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs outline-none focus:border-[#00d4ff]/40 text-white"></textarea>
+                        <div class="flex gap-2">
+                            <button (click)="submitReview()" class="bg-[#00d4ff] text-[#09090f] font-bold text-xs px-4 py-2 rounded-lg cursor-pointer">
+                                Gửi đánh giá
+                            </button>
+                            <button (click)="selectedProductToReview = null" class="bg-transparent border border-slate-800 text-slate-400 text-xs px-4 py-2 rounded-lg cursor-pointer">
+                                Hủy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>

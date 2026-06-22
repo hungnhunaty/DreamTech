@@ -2,22 +2,36 @@
     <div class="max-w-7xl mx-auto flex items-center justify-between md:h-2/3 px-4">
         <div class="flex items-center md:mr-10">
             <img src="/DreamTechLogo.png" class="md:w-18">
-            <a routerLink="/home"><span class="text-xl tracking-tight font-extrabold text-white" style="font-family: Rajdhani, sans-serif; letter-spacing: 1px;">Dream<span class="text-[#00d4ff]">Tech</span></span></a
-                >
+            <a routerLink="/home"><span class="text-xl tracking-tight font-extrabold text-white"
+                    style="font-family: Rajdhani, sans-serif; letter-spacing: 1px;">Dream<span
+                        class="text-[#00d4ff]">Tech</span></span></a>
         </div>
-        <div class="flex flex-1 gap-x-5 items-center text-[#8888aa]">
-            <a routerLink="/laptop" class="text-sm hover:text-[#00d4ff] hover:bg-[#00d4ff]/5 hover:cursor-pointer  px-2 py-1 rounded-lg transition-colors">Laptop</a>
-            <a routerLink="/pc" class="text-sm hover:text-[#00d4ff] hover:bg-[#00d4ff]/5 hover:cursor-pointer  px-2 py-1 rounded-lg transition-colors">PC & Máy tính</a>
-            <a routerLink="/mobile" class="text-sm hover:text-[#00d4ff] hover:bg-[#00d4ff]/5 hover:cursor-pointer  px-2 py-1 rounded-lg transition-colors">Điện Thoại</a>
-            <a routerLink="/monitor" class="text-sm hover:text-[#00d4ff] hover:bg-[#00d4ff]/5 hover:cursor-pointer  px-2 py-1 rounded-lg transition-colors">Màn Hình</a>
-            <a routerLink="/part" class="text-sm hover:text-[#00d4ff] hover:bg-[#00d4ff]/5 hover:cursor-pointer  px-2 py-1 rounded-lg transition-colors">Phụ Kiện</a>
-            <a routerLink="/gaming" class="text-sm hover:text-[#00d4ff] hover:bg-[#00d4ff]/5 hover:cursor-pointer  px-2 py-1 rounded-lg transition-colors">Gaming</a>
-            <a routerLink="/discount" class="text-sm hover:text-[#00d4ff] hover:bg-[#00d4ff]/5 hover:cursor-pointer  px-2 py-1 rounded-lg transition-colors">Khuyến Mãi</a>
+
+        <div class="flex items-center text-[#8888aa]">
+            <div *ngIf="!isLoggedIn()" class="flex gap-x-5">
+                <a routerLink="/user/shop"
+                    class="text-sm hover:text-[#00d4ff] hover:cursor-pointer">Cửa Hàng</a>
+                <a routerLink="/user/pc-builder"
+                    class="text-sm hover:text-[#a78bfa] hover:cursor-pointer">Build PC ✨</a>
+                <a routerLink="/login"
+                    class="active:scale-110 transition hover:text-[#00d4ff] hover:cursor-pointer text-sm">Đăng Nhập</a>
+                <a routerLink="/register"
+                    class="active:scale-110 transition hover:text-[#00d4ff] hover:cursor-pointer text-sm">Đăng Ký</a>
+            </div>
+            <div *ngIf="isLoggedIn()" class="flex gap-x-5">
+                <span class="text-sm text-white font-medium">Xin chào, {{getUserName()}}</span>
+                <a *ngIf="isAdmin()" routerLink="/admin/dashboard"
+                    class="text-sm hover:text-[#00d4ff] hover:cursor-pointer">Quản Trị</a>
+                <a routerLink="/user/shop"
+                    class="text-sm hover:text-[#00d4ff] hover:cursor-pointer">Cửa Hàng</a>
+                <a routerLink="/user/pc-builder"
+                    class="text-sm hover:text-[#a78bfa] hover:cursor-pointer">Build PC ✨</a>
+                <a *ngIf="!isAdmin()" routerLink="/user/cart"
+                    class="text-sm hover:text-[#00d4ff] hover:cursor-pointer">Giỏ Hàng</a>
+                <a *ngIf="!isAdmin()" routerLink="/user/userDashboard"
+                    class="text-sm hover:text-[#00d4ff] hover:cursor-pointer">Đơn Hàng</a>
+                <button (click)="logout()" class="text-sm hover:text-red-500 transition-colors">Đăng Xuất</button>
+            </div>
         </div>
-        <div class="flex items-center gap-x-6 text-[#8888aa]">
-            <a routerLink="/login" class="active:scale-110 transition hover:text-[#00d4ff] hover:cursor-pointer">Login</a>
-            <a routerLink="/register" class="active:scale-110 transition hover:text-[#00d4ff] hover:cursor-pointer">Sign Up</a>
-        </div>  
     </div>
 </nav>
-

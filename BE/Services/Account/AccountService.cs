@@ -20,7 +20,7 @@ namespace BE.Services.Account
             _tokenProvider = tokenProvider;
         }
 
-        public async Task<bool> CreateUserAccount(AccountRegisterDto newAccount)
+        public async Task<bool> CreateUserAccountAsync(AccountRegisterDto newAccount)
         {
             if (string.IsNullOrEmpty(newAccount.Phone))
             {
@@ -58,7 +58,7 @@ namespace BE.Services.Account
         }
 
 
-        public async Task<LoginResponseDto> CheckLogin(AccountLoginDto accountLoginDto)
+        public async Task<LoginResponseDto> CheckLoginAsync(AccountLoginDto accountLoginDto)
         {
             var curAccount = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == accountLoginDto.Username);
 
@@ -71,13 +71,14 @@ namespace BE.Services.Account
 
             return new LoginResponseDto
             (
+                curAccount.UserID,
                 curAccount.FullName,
                 curAccount.Role,
                 token
             );
         }
 
-        public async Task<bool> SeedAdmin()
+        public async Task<bool> SeedAdminAsync()
         {
             var curAdmin = await _dbContext.Users.AnyAsync(u => u.Role == "Admin");
             if(curAdmin is false)
@@ -98,6 +99,49 @@ namespace BE.Services.Account
                 return true;
             }
             return false;
+        }
+
+        public async Task<List<GetUserDto>> GetAllUsers()
+        {
+            var data = await _dbContext.Users.Select(u => new GetUserDto(
+                u.UserID,
+                u.Username,
+                u.FullName,
+                u.Email,
+                u.Phone,
+                u.Address,
+                u.Role,
+                u.CreatedAt
+            )).ToListAsync();
+
+            return data;
+        }
+
+        public async Task<bool> DeleteUserById(int id)
+        {
+            try
+            {
+                var delUser = await _dbContext.Users.FindAsync(id);
+                if(delUser is null)
+                {
+                    return false;
+                }
+
+                // Không cho phép xóa tài khoản Admin
+                if(delUser.Role.ToLower() == "admin")
+                {
+                    return false;
+                }
+
+                _dbContext.Users.Remove(delUser);
+                await _dbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

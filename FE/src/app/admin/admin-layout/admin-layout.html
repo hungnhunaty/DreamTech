@@ -1,7 +1,7 @@
 <div class="min-h-screen  bg-[#0c0c16] text-white flex">
-    <aside class="w-full flex flex-col border border-black border-b max-w-[25vh]">
-        <div class="flex items-center py-3 px-5 border-b border-white/10">
-            <div class="p-2 border-0 shrink-0 w-10 h-10 bg-white rounded-[50%] mr-2">
+    <aside class="flex flex-col border border-white/20 border-b w-64">
+        <div class="flex items-center py-3 px-5 border-b border-white/20">
+            <div class="p-2 border-0 shrink-0 w-12 h-12 bg-white rounded-[50%] mr-2">
                 <img src="electric.png">
             </div>
             <p class="font-sans font-extrabold text-xl">Dream<span class="text-[#00d4ff]">Tech</span></p>
@@ -57,12 +57,7 @@
                               <img src="rating.png" class="w-8 h-8"><span class="whitespace-nowrap">Đánh giá</span><span class="ml-auto w-1.5 h-1.5 rounded-full bg-[#00d4ff] opacity-0 group-[.is-active]:opacity-100"></span>
             </button>
 
-            <button class="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
-                              text-[#8888aa] hover:bg-[#1a1a2a]  border border-transparent"
-                    routerLink="/admin/revenue"
-                    routerLinkActive="!bg-[#00d4ff]/10 !text-[#00d4ff] !border !border-[#00d4ff]/20 is-active">
-                              <img src="revenue.png" class="w-8 h-8"><span class="whitespace-nowrap">Báo cáo doanh thu</span><span class="ml-auto w-1.5 h-1.5 rounded-full bg-[#00d4ff] opacity-0 group-[.is-active]:opacity-100"></span>
-            </button>
+
         </nav>
 
         <div class="flex items-center px-4 py-2 border-t border-white/20">
@@ -70,11 +65,15 @@
                               text-[#8888aa] hover:bg-red-600/30 hover:text-red-500 border border-transparent"><img src="logout.png" class="w-8 h-8">Đăng xuất</button>
         </div>
     </aside>
+        <div class="flex-1 flex flex-col">
+        <app-admin-header></app-admin-header>
+
         <main class="flex-1">
-            <div class="max-w-full mx-auto">
+            <div class="p-5">
                 <router-outlet></router-outlet>
             </div>
         </main>
+        </div>
 </div>
 
 

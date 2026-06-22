@@ -1,7 +1,13 @@
 using System.Text;
 using BE.Model;
 using BE.Services.Account;
+using BE.Services.AiF;
+using BE.Services.CategoryF;
+using BE.Services.CouponF;
 using BE.Services.JWT;
+using BE.Services.OrderF;
+using BE.Services.ProductF;
+using BE.Services.ReviewF;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -48,6 +54,13 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<TokenProvider>();
 builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<CategoryService>();
+builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<CouponService>();
+builder.Services.AddScoped<ReviewService>();
+builder.Services.AddScoped<AiService>();
+builder.Services.AddHttpClient();
 
 
 builder.Services.AddAuthentication();
@@ -62,7 +75,7 @@ using(var scope = app.Services.CreateScope())
     {
         var accountService = services.GetRequiredService<AccountService>();
 
-        await accountService.SeedAdmin();
+        await accountService.SeedAdminAsync();
     }
     catch(Exception ex)
     {
@@ -71,6 +84,7 @@ using(var scope = app.Services.CreateScope())
 }
 
 
+app.UseStaticFiles();
 app.UseCors("CorsPolicy");
 
 app.UseAuthentication();

@@ -1,0 +1,126 @@
+<div class="space-y-6">
+
+    <!-- Tiêu đề + Tìm kiếm -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <h1 class="text-2xl font-bold">Cửa Hàng DreamTech</h1>
+        <input type="text" [(ngModel)]="searchText" (input)="filterProducts()"
+            placeholder="Tìm sản phẩm..."
+            class="bg-[#111118] border border-slate-800 rounded-lg py-2 px-4 text-sm outline-none w-full md:w-64 focus:border-[#00d4ff]/40">
+    </div>
+
+    <!-- Danh mục -->
+    <div class="flex flex-wrap gap-2">
+        <button (click)="selectCategory(null)"
+            [class]="selectedCategoryId === null ? 'bg-[#00d4ff] text-[#09090f] font-bold' : 'bg-[#111118] text-[#8888aa] border border-slate-800'"
+            class="px-4 py-2 rounded-lg text-xs cursor-pointer">
+            Tất cả
+        </button>
+        <button *ngFor="let cat of categories" (click)="selectCategory(cat.categoryId)"
+            [class]="selectedCategoryId === cat.categoryId ? 'bg-[#00d4ff] text-[#09090f] font-bold' : 'bg-[#111118] text-[#8888aa] border border-slate-800'"
+            class="px-4 py-2 rounded-lg text-xs cursor-pointer">
+            {{cat.name}}
+        </button>
+    </div>
+
+    <!-- Danh sách sản phẩm -->
+    <div *ngIf="filteredProducts.length === 0" class="text-center py-16 text-slate-500 text-sm">
+        Không tìm thấy sản phẩm nào.
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div *ngFor="let p of filteredProducts" (click)="openDetails(p)"
+            class="bg-[#111118] border border-slate-800 rounded-xl overflow-hidden hover:border-slate-700 transition-all cursor-pointer">
+
+            <!-- Ảnh -->
+            <div class="bg-slate-950 aspect-square flex items-center justify-center p-4">
+                <img [src]="p.imageUrl" class="max-h-full max-w-full object-contain">
+            </div>
+
+            <!-- Thông tin -->
+            <div class="p-3 space-y-2">
+                <p class="text-[10px] text-[#8888aa] uppercase">{{p.brand}}</p>
+                <h4 class="text-sm font-semibold text-white line-clamp-2">{{p.name}}</h4>
+            <div class="flex flex-col justify-between">
+                <div class="flex items-baseline gap-2">
+                    <span class="text-sm font-bold text-[#00d4ff]">{{ getPrice(p) | number }}₫</span>
+                    <span *ngIf="p.discountPrice" class="text-xs text-[#8888aa] line-through">{{ p.price | number }}₫</span>
+                </div>
+
+                <!-- Nút -->
+                <div class="flex gap-2 pt-1">
+                    <button (click)="addToCart(p, $event)"
+                        class="flex-1 border border-slate-800 hover:border-[#00d4ff]/40 text-xs py-2 rounded-lg cursor-pointer transition-colors">
+                        Giỏ hàng
+                    </button>
+                    <button (click)="buyNow(p, $event)"
+                        class="flex-1 bg-[#00d4ff] text-[#09090f] font-bold text-xs py-2 rounded-lg cursor-pointer">
+                        Mua ngay
+                    </button>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Chi Tiết Sản Phẩm -->
+    <div *ngIf="selectedProduct" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div class="bg-[#111118] border border-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 relative">
+            
+            <!-- Đóng -->
+            <button (click)="closeDetails()" class="absolute top-4 right-4 text-slate-400 hover:text-white cursor-pointer">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <!-- Chi tiết chính -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-slate-950 rounded-xl aspect-square flex items-center justify-center p-4">
+                    <img [src]="selectedProduct.imageUrl" class="max-h-full max-w-full object-contain">
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-xs text-[#8888aa] uppercase font-bold">{{selectedProduct.brand}}</p>
+                        <h2 class="text-lg font-bold text-white mt-1">{{selectedProduct.name}}</h2>
+                    </div>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-lg font-bold text-[#00d4ff]">{{ getPrice(selectedProduct) | number }}₫</span>
+                        <span *ngIf="selectedProduct.discountPrice" class="text-sm text-[#8888aa] line-through">{{ selectedProduct.price | number }}₫</span>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-xs text-[#8888aa]">Mô tả</p>
+                        <p class="text-sm text-slate-300">{{ selectedProduct.description || 'Không có mô tả cho sản phẩm này.' }}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button (click)="addToCart(selectedProduct)" class="flex-1 bg-[#111118] border border-slate-800 text-white hover:border-[#00d4ff]/40 text-sm py-2.5 rounded-lg cursor-pointer">
+                            Thêm vào giỏ
+                        </button>
+                        <button (click)="buyNow(selectedProduct)" class="flex-1 bg-[#00d4ff] text-[#09090f] font-bold text-sm py-2.5 rounded-lg cursor-pointer">
+                            Mua ngay
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Đánh giá -->
+            <div class="border-t border-slate-800 mt-6 pt-6 space-y-4">
+                <h3 class="text-base font-bold">Đánh giá sản phẩm ({{reviews.length}})</h3>
+
+                <!-- List reviews -->
+                <div class="space-y-3 max-h-48 overflow-y-auto">
+                    <p *ngIf="reviews.length === 0" class="text-sm text-slate-500">Chưa có đánh giá nào cho sản phẩm này.</p>
+                    <div *ngFor="let r of reviews" class="bg-slate-950/40 p-3 rounded-lg border border-slate-800/40">
+                        <div class="flex justify-between text-xs text-[#8888aa] mb-1">
+                            <span class="font-bold text-slate-300">{{ r.fullName }}</span>
+                            <span>{{ r.createdAt | date:'dd/MM/yyyy' }}</span>
+                        </div>
+                        <div class="text-yellow-500 text-xs mb-1">★ {{ r.rating }} / 5</div>
+                        <p class="text-sm text-slate-200">{{ r.comment }}</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

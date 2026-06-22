@@ -21,7 +21,7 @@ namespace BE.Controller
         private readonly AccountService _accountService;
         public AccountController(AccountService accountService)
         {
-            _accountService = accountService; 
+            _accountService = accountService;
         }
 
         [HttpPost("register")]
@@ -29,7 +29,7 @@ namespace BE.Controller
         {
             try
             {
-                bool result = await _accountService.CreateUserAccount(account);
+                bool result = await _accountService.CreateUserAccountAsync(account);
 
                 if (!result)
                 {
@@ -49,7 +49,7 @@ namespace BE.Controller
         {
             try
             {
-                var checkLogin = await _accountService.CheckLogin(accountLoginDto);
+                var checkLogin = await _accountService.CheckLoginAsync(accountLoginDto);
 
                 if(checkLogin is null)
                 {
@@ -61,6 +61,24 @@ namespace BE.Controller
             {
                 return BadRequest(new {message = "Error: " + ex.Message});
             }
+        }
+
+        [HttpGet("getUsers")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var data = await _accountService.GetAllUsers();
+            return Ok(data);
+        }
+
+        [HttpDelete("deleteUser/{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var result = await _accountService.DeleteUserById(id);
+            if(result == false)
+            {
+                return BadRequest(new {message = "Không thể xóa tài khoản này"});
+            }
+            return Ok(new {message = "Xóa tài khoản thành công"});
         }
     }
 }

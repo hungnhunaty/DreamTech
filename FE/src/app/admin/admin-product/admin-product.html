@@ -1,1 +1,324 @@
-<p>admin-product works!</p>
+<div class="bg-[#09090f] min-h-screen p-6 md:p-8 text-white font-sans">
+
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+        <div>
+            <div
+                class="inline-flex w-fit items-center gap-2 bg-[#a78bfa]/10 border border-[#a78bfa]/20 rounded-full px-3 py-1 mb-3">
+                <span class="w-2 h-2 rounded-full bg-[#a78bfa] animate-pulse"></span>
+                <span class="text-[#a78bfa] text-[10px] font-bold uppercase tracking-wider">
+                    Kho hàng: {{productList.length}} Sản phẩm
+                </span>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-tight">
+                Quản lý
+                <span class="text-[#00d4ff]" style="text-shadow: rgba(0, 212, 255, 0.4) 0px 0px 20px;">
+                    Sản Phẩm
+                </span>
+            </h1>
+        </div>
+
+        <button (click)="openCloseAddProductModal()"
+            class="flex items-center gap-x-2 bg-[#00d4ff] text-[#09090f] font-bold px-5 py-2.5 rounded-xl hover:bg-[#00d4ff]/90 transition-all shadow-[0_0_15px_rgba(0,212,255,0.25)] hover:shadow-[0_0_25px_rgba(0,212,255,0.4)]">
+            <span class="font-semibold text-2xl mb-1">+</span>
+            <p>Thêm Sản Phẩm Mới</p>
+        </button>
+    </div>
+
+    <div
+        class="bg-[#111118] border border-slate-800 rounded-t-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between border-b-0">
+
+        <div class="relative w-full md:w-96 group">
+            <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#8888aa] group-focus-within:text-[#00d4ff] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input type="text" [(ngModel)]="searchText" (input)="applyFilters()" placeholder="Tìm tên sản phẩm, thương hiệu..."
+                class="bg-[#09090f] text-white text-sm rounded-xl py-2.5 pl-10 pr-4 w-full border border-slate-800 focus:outline-none focus:border-[#00d4ff]/50 focus:ring-1 focus:ring-[#00d4ff]/50 transition-all placeholder-[#555570]">
+        </div>
+
+        <div class="flex items-center gap-3 w-full md:w-auto">
+            <select [(ngModel)]="selectedCategoryId" (change)="applyFilters()"
+                class="bg-[#09090f] border border-slate-800 text-[#8888aa] text-sm rounded-xl focus:ring-[#00d4ff]/50 focus:border-[#00d4ff]/50  p-2.5 outline-none hover:border-slate-700 transition-colors cursor-pointer">
+                <option value="">Tất cả danh mục</option>
+                <option *ngFor="let cat of categoryList" [value]="cat.categoryId">{{cat.name}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="bg-[#111118] border border-slate-800 rounded-b-2xl overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left whitespace-nowrap">
+                <thead>
+                    <tr
+                        class="text-[#8888aa] text-xs uppercase tracking-wider border-y border-slate-800 bg-[#0c0c16]/50">
+                        <th class="py-4 pl-6 font-medium">Sản phẩm</th>
+                        <th class="py-4 px-4 font-medium">Danh mục</th>
+                        <th class="py-4 px-4 font-medium">Giá bán</th>
+                        <th class="py-4 px-4 font-medium">Tồn kho</th>
+                        <th class="py-4 px-4 font-medium">Trạng thái</th>
+                        <th class="py-4 px-4 font-medium text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm divide-y divide-slate-800/50">
+                    @for(product of filteredProducts; track product.productId){
+                    <tr class="hover:bg-[#1e1e30] transition-colors group">
+                        <td class="py-4 pl-6">
+                            <div class="flex items-center gap-3">
+                                <img [src]="product.imageUrl || 'assets/placeholder.png'"
+                                    class="w-12 h-12 object-cover rounded-lg border border-slate-700 shadow-md"
+                                    alt="{{product.name}}">
+                                <div>
+                                    <p
+                                        class="text-white font-bold text-base group-hover:text-[#00d4ff] transition-colors">
+                                        {{product.name}}</p>
+                                    <p class="text-[11px] text-[#8888aa] mt-0.5">{{product.brand}}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-4">
+                            <span
+                                class="inline-flex items-center bg-[#a78bfa]/10 text-[#a78bfa] border border-[#a78bfa]/20 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide">
+                                {{product.categoryName}}
+                            </span>
+                        </td>
+                        <td class="py-4 px-4">
+                            <p class="font-bold text-[#00d4ff]" style="font-family: Rajdhani, sans-serif;">
+                                {{product.price | number:'1.0-0'}}₫</p>
+                        </td>
+                        <td class="py-4 px-4">
+                            <p class="font-bold"
+                                [class]="product.quantity > 10 ? 'text-[#34d399]' : product.quantity > 0 ? 'text-[#f59e0b]' : 'text-[#ff3d5a]'"
+                                style="font-family: Rajdhani, sans-serif;">{{product.quantity}}</p>
+                        </td>
+                        <td class="py-4 px-4">
+                            <span *ngIf="product.isActive"
+                                class="inline-flex items-center gap-1.5 bg-[#34d399]/10 text-[#34d399] border border-[#34d399]/20 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#34d399] animate-pulse"></span> ĐANG BÁN
+                            </span>
+                            <span *ngIf="!product.isActive"
+                                class="inline-flex items-center gap-1.5 bg-slate-800 text-[#8888aa] border border-slate-700 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide">
+                                NGỪNG BÁN
+                            </span>
+                        </td>
+                        <td class="flex justify-center gap-x-2 mt-5">
+                            <button
+                                class="px-3 py-1.5 border bg-blue-700 rounded-lg border-transparent hover:cursor-pointer hover:scale-110"
+                                (click)="openUpdateProductModal(product)">Sửa</button>
+                            <button
+                                class="px-3 py-1.5 border bg-red-700 rounded-lg border-transparent hover:cursor-pointer hover:scale-110"
+                                (click)="deleteProduct(product.productId)">Xóa</button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Form Add Product -->
+    <div *ngIf="this.showAddProduct"
+        class="fixed inset-0 bg-[#09090f]/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div
+            class="bg-[#111118] border border-slate-800 w-full max-w-2xl max-h-[90vh] rounded-2xl flex flex-col shadow-2xl shadow-[#00d4ff]/10">
+
+            <div class="px-6 py-5 border-b border-slate-800 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-xl font-bold text-white tracking-wide flex items-center gap-2"><span
+                            class="text-3xl bg-[#00d4ff]/10 rounded-lg text-[#00d4ff] px-2 py-1 justify-center">+
+                        </span>Thêm Sản Phẩm Mới</h2>
+                </div>
+                <button (click)="openCloseAddProductModal()" type="button"
+                    class="text-[#555570] hover:text-red-500 hover:cursor-pointer transition-colors bg-[#09090f] p-2 rounded-lg border border-transparent hover:border-slate-700">
+                    <p class="px-2">X</p>
+                </button>
+            </div>
+
+            <form [formGroup]="addProductForm" (ngSubmit)="onSubmit()">
+                <div class="p-6 overflow-y-auto custom-scrollbar">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                        <div class="md:col-span-2">
+                            <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Tên
+                                sản phẩm <span class="text-[#ff3d5a]">*</span></label>
+                            <input formControlName="Name" type="text"
+                                placeholder="Nhập tên sản phẩm (VD: Laptop ASUS ROG Strix...)"
+                                class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]">
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Danh
+                                mục <span class="text-[#ff3d5a]">*</span></label>
+                            <select formControlName="CategoryId"
+                                class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all appearance-none cursor-pointer">
+                                <option value="" disabled selected class="text-[#555570]">-- Chọn danh mục --</option>
+                                @for(cat of categoryList; track cat.categoryId){
+                                <option [value]="cat.categoryId">{{cat.name}}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Thương
+                                hiệu</label>
+                            <input formControlName="Brand" type="text" placeholder="VD: ASUS, MSI, Logitech..."
+                                class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]">
+                        </div>
+
+                        <div>
+                            <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Giá
+                                bán (VNĐ) <span class="text-[#ff3d5a]">*</span></label>
+                            <input formControlName="Price" type="number" placeholder="0"
+                                class="w-full bg-[#09090f] border border-slate-800 text-[#00d4ff] font-bold text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]"
+                                style="font-family: Rajdhani, sans-serif;">
+                        </div>
+
+                        <div>
+                            <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Số
+                                lượng kho <span class="text-[#ff3d5a]">*</span></label>
+                            <input formControlName="Quantity" type="number" placeholder="0"
+                                class="w-full bg-[#09090f] border border-slate-800 text-white font-bold text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]"
+                                style="font-family: Rajdhani, sans-serif;">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label
+                                class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Hình
+                                ảnh sản phẩm</label>
+                            <input type="file" (change)="onFileSelected($event)" accept="image/*"
+                                class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Mô
+                                tả sản phẩm</label>
+                            <textarea formControlName="Description" rows="4"
+                                placeholder="Nhập cấu hình, tính năng nổi bật..."
+                                class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570] resize-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="px-6 py-4 border-t border-slate-800 flex items-center justify-end gap-3 shrink-0 bg-[#0c0c16] rounded-b-2xl">
+                    <button (click)="openCloseAddProductModal()" type="button"
+                        class="px-5 py-2.5 rounded-xl border border-slate-700 hover:cursor-pointer text-[#8888aa] font-bold text-sm hover:bg-slate-800 hover:text-red-500 transition-all">
+                        Hủy Bỏ
+                    </button>
+                    <button (click)="openCloseAddProductModal()" [disabled]="addProductForm.invalid" type="submit"
+                        class="disabled:opacity-50 disabled:cursor-not-allowed disabled:text-black px-5 py-2.5 rounded-xl hover:text-green-200 bg-[#00d4ff] hover:cursor-pointer text-[#09090f] font-bold text-sm hover:bg-[#00d4ff]/90 transition-all shadow-[0_0_15px_rgba(0,212,255,0.25)] flex items-center gap-2">
+                        Lưu Sản Phẩm
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Form Update Product -->
+    <div *ngIf="this.showUpdateProduct"
+        class="fixed inset-0 bg-[#09090f]/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div
+            class="bg-[#111118] border border-slate-800 w-full max-w-2xl max-h-[90vh] rounded-2xl flex flex-col shadow-2xl shadow-[#00d4ff]/10">
+
+            <div class="px-6 py-5 border-b border-slate-800 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-xl font-bold text-white tracking-wide">Cập Nhật Sản Phẩm</h2>
+                </div>
+                <button (click)="openCloseUpdateProductModal()" type="button"
+                    class="text-[#555570] hover:text-red-500 hover:cursor-pointer transition-colors bg-[#09090f] p-2 rounded-lg border border-transparent hover:border-slate-700">
+                    <p class="px-2">X</p>
+                </button>
+            </div>
+            <form [formGroup]="updateProductForm" (ngSubmit)="updateProduct()">
+                <div class="p-6 overflow-y-auto custom-scrollbar">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="md:col-span-2">
+                            <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Mã sản phẩm (ID)</label>
+                            <input type="text" [value]="updateProductForm.get('ProductId')?.value" disabled
+                                class="w-full bg-[#09090f]/50 border border-slate-800 text-slate-500 text-sm rounded-xl px-4 py-3 cursor-not-allowed">
+                            <input formControlName="ProductId" type="hidden">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Tên
+                                sản phẩm <span class="text-[#ff3d5a]">*</span></label>
+                            <input formControlName="Name" type="text" placeholder="Nhập tên sản phẩm..."
+                                class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]">
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Danh
+                                mục <span class="text-[#ff3d5a]">*</span></label>
+                            <select formControlName="CategoryId"
+                                class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all">
+                                @for(cat of categoryList; track cat.categoryId){
+                                <option [value]="cat.categoryId">{{cat.name}}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Thương
+                                hiệu</label>
+                            <input formControlName="Brand" type="text" placeholder="VD: ASUS, MSI..."
+                                class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]">
+                        </div>
+
+                        <div>
+                            <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Giá
+                                bán (VNĐ) <span class="text-[#ff3d5a]">*</span></label>
+                            <input formControlName="Price" type="number" placeholder="0"
+                                class="w-full bg-[#09090f] border border-slate-800 text-[#00d4ff] font-bold text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]"
+                                style="font-family: Rajdhani, sans-serif;">
+                        </div>
+
+                        <div>
+                            <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">
+                                Khuyến mãi (Số tiền khuyến mãi)</label>
+                            <input formControlName="DiscountPrice" type="number" placeholder="0"
+                                class="w-full bg-[#09090f] border border-slate-800 text-[#34d399] font-bold text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]"
+                                style="font-family: Rajdhani, sans-serif;">
+                        </div>
+
+                        <div>
+                            <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Số
+                                lượng kho <span class="text-[#ff3d5a]">*</span></label>
+                            <input formControlName="Quantity" type="number" placeholder="0"
+                                class="w-full bg-[#09090f] border border-slate-800 text-white font-bold text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]"
+                                style="font-family: Rajdhani, sans-serif;">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Cập
+                                nhật hình ảnh (Bỏ trống nếu không đổi)</label>
+                            <input type="file" (change)="onFileSelected($event)" accept="image/*"
+                                class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Mô
+                                tả sản phẩm</label>
+                            <textarea formControlName="Description" rows="3" placeholder="Nhập mô tả sản phẩm..."
+                                class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570] resize-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="px-6 py-4 border-t border-slate-800 flex items-center justify-end gap-3 shrink-0 bg-[#0c0c16] rounded-b-2xl">
+                    <button (click)="openCloseUpdateProductModal()" type="button"
+                        class="px-5 py-2.5 rounded-xl border border-slate-700 hover:cursor-pointer text-[#8888aa] font-bold text-sm hover:bg-slate-800 hover:text-red-500 transition-all">
+                        Hủy Bỏ
+                    </button>
+                    <button (click)="openCloseUpdateProductModal()" [disabled]="updateProductForm.invalid" type="submit"
+                        class="disabled:opacity-50 disabled:cursor-not-allowed disabled:text-black px-5 py-2.5 rounded-xl hover:text-green-200 bg-[#00d4ff] hover:cursor-pointer text-[#09090f] font-bold text-sm hover:bg-[#00d4ff]/90 transition-all shadow-[0_0_15px_rgba(0,212,255,0.25)] flex items-center gap-2">
+                        Lưu Sản Phẩm
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</div>

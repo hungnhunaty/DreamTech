@@ -1,1 +1,117 @@
-<p>admin-dashboard works!</p>
+<div class="bg-[#09090f] min-h-screen p-6 md:p-8 text-white font-sans">
+    
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+        <div>
+            <div class="inline-flex w-fit items-center gap-2 bg-[#00d4ff]/10 border border-[#00d4ff]/20 rounded-full px-3 py-1 mb-3">
+                <span class="w-2 h-2 rounded-full bg-[#00d4ff] animate-ping"></span>
+                <span class="text-[#00d4ff] text-[10px] font-bold uppercase tracking-wider">
+                    Cập nhật realtime
+                </span>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold leading-none tracking-tight"> 
+                Tổng quan 
+                <span class="text-[#00d4ff]" style="text-shadow: rgba(0, 212, 255, 0.4) 0px 0px 20px;">
+                    Hệ thống
+                </span>
+            </h1>
+        </div>
+
+        <!-- Bộ lọc tháng / năm doanh thu -->
+        <div class="flex items-center gap-3 bg-[#111118] border border-slate-800 p-2.5 rounded-xl">
+            <span class="text-xs text-[#8888aa] font-semibold uppercase tracking-wider pl-2">Doanh thu theo:</span>
+            <select [(ngModel)]="selectedMonth" (change)="calculateMonthlyRevenue()" class="bg-[#09090f] border border-slate-800 text-xs rounded-lg p-2 text-white outline-none focus:border-[#00d4ff]/50">
+                <option *ngFor="let m of months" [value]="m">Tháng {{m}}</option>
+            </select>
+            <select [(ngModel)]="selectedYear" (change)="calculateMonthlyRevenue()" class="bg-[#09090f] border border-slate-800 text-xs rounded-lg p-2 text-white outline-none focus:border-[#00d4ff]/50">
+                <option *ngFor="let y of years" [value]="y">Năm {{y}}</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+        
+        <div class="bg-[#111118] border border-slate-800 rounded-2xl p-5 hover:border-[#00d4ff]/40 hover:bg-[#1e1e30] transition-all duration-300 group relative overflow-hidden">
+            <div class="absolute -right-4 -top-4 w-20 h-20 bg-[#00d4ff]/10 rounded-full blur-2xl group-hover:bg-[#00d4ff]/20 transition-all"></div>
+            <div class="flex items-start justify-between mb-2">
+                <p class="text-sm font-medium text-[#8888aa] group-hover:text-white transition-colors">Doanh thu tháng {{selectedMonth}}/{{selectedYear}}</p>
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-[#00d4ff]/10 text-[#00d4ff] font-bold text-lg">
+                    ₫
+                </div>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-1" style="font-family: Rajdhani, sans-serif;">{{ monthlyRevenue | number }}₫</h3>
+            <p class="text-xs text-[#8888aa] font-medium">Doanh thu theo tháng</p>
+        </div>
+
+        <div class="bg-[#111118] border border-slate-800 rounded-2xl p-5 hover:border-[#a78bfa]/40 hover:bg-[#1e1e30] transition-all duration-300 group relative overflow-hidden">
+            <div class="absolute -right-4 -top-4 w-20 h-20 bg-[#a78bfa]/10 rounded-full blur-2xl group-hover:bg-[#a78bfa]/20 transition-all"></div>
+            <div class="flex items-start justify-between mb-2">
+                <p class="text-sm font-medium text-[#8888aa] group-hover:text-white transition-colors">Tổng đơn hàng</p>
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-[#a78bfa]/10 text-[#a78bfa] font-bold text-lg">
+                    📦
+                </div>
+            </div>
+            <h3 class="text-3xl font-bold text-white mb-1" style="font-family: Rajdhani, sans-serif;">{{ totalOrders }}</h3>
+            <p class="text-xs text-[#8888aa] font-medium">Tổng số lượng đơn hàng</p>
+        </div>
+
+        <div class="bg-[#111118] border border-slate-800 rounded-2xl p-5 hover:border-[#34d399]/40 hover:bg-[#1e1e30] transition-all duration-300 group relative overflow-hidden">
+            <div class="absolute -right-4 -top-4 w-20 h-20 bg-[#34d399]/10 rounded-full blur-2xl group-hover:bg-[#34d399]/20 transition-all"></div>
+            <div class="flex items-start justify-between mb-2">
+                <p class="text-sm font-medium text-[#8888aa] group-hover:text-white transition-colors">Khách hàng mới</p>
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-[#34d399]/10 text-[#34d399] font-bold text-lg">
+                    👥
+                </div>
+            </div>
+            <h3 class="text-3xl font-bold text-white mb-1" style="font-family: Rajdhani, sans-serif;">{{ totalUsers }}</h3>
+            <p class="text-xs text-[#8888aa] font-medium">Khách hàng đã đăng ký</p>
+        </div>
+
+    </div>
+
+    <!-- Recent Orders Table -->
+    <div class="bg-[#111118] border border-slate-800 rounded-2xl p-6">
+        
+        <div class="flex items-center justify-between mb-6 border-b border-slate-800 pb-4">
+            <div class="flex items-center gap-3">
+                <div class="w-1 h-6 bg-[#00d4ff] rounded-full" style="box-shadow: 0 0 10px rgba(0,212,255,0.5);"></div>
+                <h2 class="text-xl font-bold text-white tracking-wide" style="font-family: Rajdhani, sans-serif;">ĐƠN HÀNG CHƯA DUYỆT (CHỜ XỬ LÝ)</h2>
+            </div>
+        </div>
+
+        <div *ngIf="recentOrders.length === 0" class="text-center py-8 text-slate-500 text-sm">
+            Hiện tại không có đơn hàng nào chờ xử lý.
+        </div>
+
+        <div class="overflow-x-auto" *ngIf="recentOrders.length > 0">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="text-[#8888aa] text-xs uppercase tracking-wider border-b border-slate-800">
+                        <th class="pb-3 pl-4 font-medium">Mã ĐH</th>
+                        <th class="pb-3 font-medium">Khách hàng</th>
+                        <th class="pb-3 font-medium">Địa chỉ</th>
+                        <th class="pb-3 font-medium">Tổng tiền</th>
+                        <th class="pb-3 font-medium">Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm">
+                    <tr *ngFor="let order of recentOrders" class="border-b border-slate-800/50 hover:bg-[#1e1e30] transition-colors group">
+                        <td class="py-4 pl-4 font-bold text-white" style="font-family: Rajdhani, sans-serif;">#{{ order.orderId }}</td>
+                        <td class="py-4">
+                            <p class="text-white font-medium">{{ order.receiverName }}</p>
+                            <p class="text-xs text-[#8888aa]">{{ order.phone }}</p>
+                        </td>
+                        <td class="py-4 text-[#8888aa] truncate max-w-[200px]" [title]="order.address">{{ order.address }}</td>
+                        <td class="py-4 font-bold text-[#00d4ff]" style="font-family: Rajdhani, sans-serif;">{{ order.totalAmount | number }}₫</td>
+                        <td class="py-4">
+                            <span class="px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide border" [ngClass]="getStatusBadgeClass(order.status)">
+                                {{ getStatusText(order.status) | uppercase }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

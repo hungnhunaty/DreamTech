@@ -1,1 +1,248 @@
-<p>admin-discount works!</p>
+<div class="bg-[#09090f] min-h-screen p-6 md:p-8 text-white font-sans">
+    
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+        <div>
+            <div class="inline-flex w-fit items-center gap-2 bg-[#f472b6]/10 border border-[#f472b6]/20 rounded-full px-3 py-1 mb-3">
+                <span class="w-2 h-2 rounded-full bg-[#f472b6] animate-pulse"></span>
+                <span class="text-[#f472b6] text-[10px] font-bold uppercase tracking-wider">
+                    Tổng: {{listOfCoupons.length}} Chương trình
+                </span>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold leading-none tracking-tight"> 
+                Quản lý 
+                <span class="text-[#00d4ff]" style="text-shadow: rgba(0, 212, 255, 0.4) 0px 0px 20px;">Khuyến Mãi</span>
+            </h1>
+        </div>
+        <button (click)="openCloseAddCouponModal()" class="flex items-center gap-2 bg-[#00d4ff] text-[#09090f] font-bold px-5 py-2.5 rounded-xl hover:bg-[#00d4ff]/90 transition-all shadow-[0_0_15px_rgba(0,212,255,0.25)]">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+            Tạo Mã Mới
+        </button>
+    </div>
+
+    <div class="bg-[#111118] border border-slate-800 rounded-t-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between border-b-0">
+        <div class="relative w-full md:w-1/3 group">
+            <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#8888aa] group-focus-within:text-[#00d4ff] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input type="text" [(ngModel)]="searchText" (input)="applyFilters()" placeholder="Tìm tên chương trình, mã code..." class="bg-[#09090f] text-white text-sm rounded-xl py-2.5 pl-10 pr-4 w-full border border-slate-800 focus:outline-none focus:border-[#00d4ff]/50 focus:ring-1 focus:ring-[#00d4ff]/50 transition-all placeholder-[#555570]">
+        </div>
+        <select [(ngModel)]="selectedStatus" (change)="applyFilters()" class="bg-[#09090f] border border-slate-800 text-[#8888aa] text-sm rounded-xl focus:ring-[#00d4ff]/50 focus:border-[#00d4ff]/50 block p-2.5 outline-none hover:border-slate-700 transition-colors w-full md:w-48">
+            <option value="">Tất cả trạng thái</option>
+            <option value="active">Đang diễn ra</option>
+            <option value="upcoming">Sắp tới</option>
+            <option value="expired">Đã kết thúc</option>
+        </select>
+    </div>
+
+    <div class="bg-[#111118] border border-slate-800 rounded-b-2xl overflow-hidden shadow-2xl relative min-h-[400px]">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse whitespace-nowrap">
+                <thead>
+                    <tr class="text-[#8888aa] text-xs uppercase tracking-wider border-y border-slate-800 bg-[#0c0c16]/50">
+                        <th class="py-4 pl-6 font-medium">Mã Code / Tên</th>
+                        <th class="py-4 px-4 font-medium">Mức Giảm</th>
+                        <th class="py-4 px-4 font-medium">Điều Kiện</th>
+                        <th class="py-4 px-4 font-medium">Thời Hạn</th>
+                        <th class="py-4 px-4 font-medium text-center">Lượt Dùng</th>
+                        <th class="py-4 px-4 font-medium text-center">Trạng Thái</th>
+                        <th class="py-4 pr-6 font-medium text-center">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm divide-y divide-slate-800/50">
+                    @for(coupon of filteredCoupons; track coupon.couponId){
+                    <tr class="hover:bg-[#1e1e30] transition-colors group">
+                        <td class="py-4 pl-6">
+                            <div class="inline-block border-2 border-dashed border-[#00d4ff]/50 bg-[#00d4ff]/10 text-[#00d4ff] px-3 py-1.5 rounded-lg font-bold tracking-widest mb-1" style="font-family: Rajdhani, sans-serif;">{{coupon.code}}</div>
+                            <p class="text-[11px] text-[#8888aa]">{{coupon.description}}</p>
+                        </td>
+                        <td class="py-4 px-4">
+                            <p class="font-bold text-white text-base">
+                                {{coupon.discountType === 'Percent' ? '-' + coupon.discountValue + '%' : '-' + (coupon.discountValue | number:'1.0-0') + '₫'}}
+                            </p>
+                            <p *ngIf="coupon.maxDiscountAmount" class="text-[11px] text-[#8888aa]">Tối đa {{coupon.maxDiscountAmount | number:'1.0-0'}}₫</p>
+                        </td>
+                        <td class="py-4 px-4 text-[#8888aa]">Đơn từ <span class="text-white font-bold">{{coupon.minOrderAmount | number:'1.0-0'}}₫</span></td>
+                        <td class="py-4 px-4">
+                            <p class="text-white">{{coupon.startDate | date:'dd/MM'}} - {{coupon.endDate | date:'dd/MM'}}</p>
+                        </td>
+                        <td class="py-4 px-4 text-center">
+                            <p class="font-bold" style="font-family: Rajdhani, sans-serif;"><span class="text-[#00d4ff]">{{coupon.usedCount}}</span> <span class="text-[#555570]">/ {{coupon.usageLimit || '∞'}}</span></p>
+                            <div *ngIf="coupon.usageLimit > 0" class="w-full bg-slate-800 rounded-full h-1.5 mt-1.5">
+                                <div class="bg-[#00d4ff] h-1.5 rounded-full" [style.width]="(coupon.usedCount / coupon.usageLimit * 100) + '%'"></div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-4 text-center">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide"
+                                  [style.background-color]="getCouponStatus(coupon).color + '1a'"
+                                  [style.color]="getCouponStatus(coupon).color"
+                                  [style.border]="'1px solid ' + getCouponStatus(coupon).color + '33'">
+                                {{getCouponStatus(coupon).label}}
+                            </span>
+                        </td>
+                        <td class="flex justify-center gap-x-2 mt-6">
+                            <button class="px-3 py-1.5 border bg-blue-700 rounded-lg border-transparent hover:cursor-pointer hover:scale-110" (click)="openUpdateCouponModal(coupon)">Sửa</button>
+                            <button class="px-3 py-1.5 border bg-red-700 rounded-lg border-transparent hover:cursor-pointer hover:scale-110" (click)="deleteCoupon(coupon.couponId)">Xóa</button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Form Add Coupon -->
+    <div *ngIf="this.showAddCoupon" class="fixed inset-0 bg-[#09090f]/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-[#111118] border border-slate-800 w-full max-w-xl max-h-[90vh] rounded-2xl flex flex-col shadow-2xl shadow-[#00d4ff]/10">
+            
+            <div class="px-6 py-5 border-b border-slate-800 flex items-center justify-between shrink-0">
+                <h2 class="text-xl font-bold text-white tracking-wide">Tạo Mã Khuyến Mãi Mới</h2>
+                <button (click)="openCloseAddCouponModal()" type="button" class="text-[#555570] hover:text-red-500 hover:cursor-pointer transition-colors bg-[#09090f] p-2 rounded-lg border border-transparent hover:border-slate-700">
+                    <p class="px-2">X</p>
+                </button>
+            </div>
+        <form [formGroup]="addCouponForm" (ngSubmit)="onSubmit()">
+            <div class="p-6 overflow-y-auto custom-scrollbar">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="md:col-span-2">
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Mã code <span class="text-[#ff3d5a]">*</span></label>
+                        <input formControlName="Code" type="text" placeholder="VD: SUMMER2026, FREESHIP..."
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570] uppercase">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Mô tả</label>
+                        <input formControlName="Description" type="text" placeholder="Mô tả chương trình khuyến mãi..."
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]">
+                    </div>
+                    <div>
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Loại giảm giá <span class="text-[#ff3d5a]">*</span></label>
+                        <select formControlName="DiscountType" class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all">
+                            <option value="Percent">Phần trăm (%)</option>
+                            <option value="Fixed">Số tiền cố định (₫)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Giá trị giảm <span class="text-[#ff3d5a]">*</span></label>
+                        <input formControlName="DiscountValue" type="number" placeholder="VD: 10 hoặc 50000"
+                            class="w-full bg-[#09090f] border border-slate-800 text-[#00d4ff] font-bold text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]" style="font-family: Rajdhani, sans-serif;">
+                    </div>
+                    <div>
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Đơn tối thiểu</label>
+                        <input formControlName="MinOrderAmount" type="number" placeholder="0"
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]" style="font-family: Rajdhani, sans-serif;">
+                    </div>
+                    <div>
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Giảm tối đa</label>
+                        <input formControlName="MaxDiscountAmount" type="number" placeholder="VD: 500000"
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]" style="font-family: Rajdhani, sans-serif;">
+                    </div>
+                    <div>
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Giới hạn lượt dùng</label>
+                        <input formControlName="UsageLimit" type="number" placeholder="0 = Không giới hạn"
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]" style="font-family: Rajdhani, sans-serif;">
+                    </div>
+                    <div>
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Ngày bắt đầu <span class="text-[#ff3d5a]">*</span></label>
+                        <input formControlName="StartDate" type="date"
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all [color-scheme:dark]">
+                    </div>
+                    <div>
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Ngày kết thúc <span class="text-[#ff3d5a]">*</span></label>
+                        <input formControlName="EndDate" type="date"
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all [color-scheme:dark]">
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-6 py-4 border-t border-slate-800 flex items-center justify-end gap-3 shrink-0 bg-[#0c0c16] rounded-b-2xl">
+                <button (click)="openCloseAddCouponModal()" type="button" class="px-5 py-2.5 rounded-xl border border-slate-700 hover:cursor-pointer text-[#8888aa] font-bold text-sm hover:bg-slate-800 hover:text-red-500 transition-all">
+                    Hủy Bỏ
+                </button>
+                <button (click)="openCloseAddCouponModal()" [disabled]="addCouponForm.invalid" type="submit" class="disabled:opacity-50 disabled:cursor-not-allowed disabled:text-black px-5 py-2.5 rounded-xl hover:text-green-200 bg-[#00d4ff] hover:cursor-pointer text-[#09090f] font-bold text-sm hover:bg-[#00d4ff]/90 transition-all shadow-[0_0_15px_rgba(0,212,255,0.25)] flex items-center gap-2">
+                    Lưu Mã Khuyến Mãi
+                </button>
+            </div>
+        </form>
+
+        </div>
+    </div>
+
+    <!-- Form Update Coupon -->
+    <div *ngIf="this.showUpdateCoupon" class="fixed inset-0 bg-[#09090f]/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-[#111118] border border-slate-800 w-full max-w-xl max-h-[90vh] rounded-2xl flex flex-col shadow-2xl shadow-[#00d4ff]/10">
+            
+            <div class="px-6 py-5 border-b border-slate-800 flex items-center justify-between shrink-0">
+                <h2 class="text-xl font-bold text-white tracking-wide">Cập Nhật Mã Khuyến Mãi</h2>
+                <button (click)="openCloseUpdateCouponModal()" type="button" class="text-[#555570] hover:text-red-500 hover:cursor-pointer transition-colors bg-[#09090f] p-2 rounded-lg border border-transparent hover:border-slate-700">
+                    <p class="px-2">X</p>
+                </button>
+            </div>
+        <form [formGroup]="updateCouponForm" (ngSubmit)="updateCoupon()">
+            <div class="p-6 overflow-y-auto custom-scrollbar">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="md:col-span-2">
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Mã khuyến mãi (ID)</label>
+                        <input type="text" [value]="updateCouponForm.get('Code')?.value + ' (ID: ' + updateCouponForm.get('CouponId')?.value + ')'" disabled
+                            class="w-full bg-[#09090f]/50 border border-slate-800 text-slate-500 text-sm rounded-xl px-4 py-3 cursor-not-allowed">
+                        <input formControlName="CouponId" type="hidden">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Mã code <span class="text-[#ff3d5a]">*</span></label>
+                        <input formControlName="Code" type="text" placeholder="VD: SUMMER2026..."
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570] uppercase">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Mô tả</label>
+                        <input formControlName="Description" type="text" placeholder="Mô tả..."
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]">
+                    </div>
+                    <div>
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Loại giảm giá</label>
+                        <select formControlName="DiscountType" class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3">
+                            <option value="Percent">Phần trăm (%)</option>
+                            <option value="Fixed">Số tiền cố định (₫)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Giá trị giảm</label>
+                        <input formControlName="DiscountValue" type="number" placeholder="0"
+                            class="w-full bg-[#09090f] border border-slate-800 text-[#00d4ff] font-bold text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]" style="font-family: Rajdhani, sans-serif;">
+                    </div>
+                    <div>
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Đơn tối thiểu</label>
+                        <input formControlName="MinOrderAmount" type="number" placeholder="0"
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]" style="font-family: Rajdhani, sans-serif;">
+                    </div>
+                    <div>
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Giảm tối đa</label>
+                        <input formControlName="MaxDiscountAmount" type="number" placeholder="0"
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]" style="font-family: Rajdhani, sans-serif;">
+                    </div>
+                    <div>
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Giới hạn lượt dùng</label>
+                        <input formControlName="UsageLimit" type="number" placeholder="0"
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d4ff]/60 focus:ring-1 focus:ring-[#00d4ff]/60 transition-all placeholder-[#555570]" style="font-family: Rajdhani, sans-serif;">
+                    </div>
+                    <div>
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Ngày bắt đầu</label>
+                        <input formControlName="StartDate" type="date"
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 [color-scheme:dark]">
+                    </div>
+                    <div>
+                        <label class="block text-[#8888aa] text-xs font-bold mb-2 ml-1 uppercase tracking-wider">Ngày kết thúc</label>
+                        <input formControlName="EndDate" type="date"
+                            class="w-full bg-[#09090f] border border-slate-800 text-white text-sm rounded-xl px-4 py-3 [color-scheme:dark]">
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-6 py-4 border-t border-slate-800 flex items-center justify-end gap-3 shrink-0 bg-[#0c0c16] rounded-b-2xl">
+                <button (click)="openCloseUpdateCouponModal()" type="button" class="px-5 py-2.5 rounded-xl border border-slate-700 hover:cursor-pointer text-[#8888aa] font-bold text-sm hover:bg-slate-800 hover:text-red-500 transition-all">
+                    Hủy Bỏ
+                </button>
+                <button (click)="openCloseUpdateCouponModal()" [disabled]="updateCouponForm.invalid" type="submit" class="disabled:opacity-50 disabled:cursor-not-allowed disabled:text-black px-5 py-2.5 rounded-xl hover:text-green-200 bg-[#00d4ff] hover:cursor-pointer text-[#09090f] font-bold text-sm hover:bg-[#00d4ff]/90 transition-all shadow-[0_0_15px_rgba(0,212,255,0.25)] flex items-center gap-2">
+                    Lưu Mã Khuyến Mãi
+                </button>
+            </div>
+        </form>
+
+        </div>
+    </div>
+</div>
