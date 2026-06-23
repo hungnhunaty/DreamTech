@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BE.Dtos;
 using BE.Services.ProductF;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BE.Controller
@@ -18,6 +19,7 @@ namespace BE.Controller
             _productService = productService;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost("addProduct")]
         public async Task<IActionResult> AddNewProduct([FromForm] AddProductDto _newProduct)
         {
@@ -38,6 +40,7 @@ namespace BE.Controller
             
         }
 
+        [AllowAnonymous]
         [HttpGet("getProduct")]
         public async Task<IActionResult> GetProducts()
         {
@@ -45,6 +48,7 @@ namespace BE.Controller
             return Ok(data);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("deleteProduct/{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
@@ -56,6 +60,7 @@ namespace BE.Controller
             return Ok(new {message = "Xóa sản phẩm thành công"});
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("updateProduct")]
         public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductDto updateProduct)
         {

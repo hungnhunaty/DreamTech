@@ -43,91 +43,124 @@ namespace BE.Services.AiF
             var productListJson = JsonSerializer.Serialize(products);
 
             // 2. Tạo prompt gửi cho Gemini
-            var systemPrompt = $@"Bạn là chuyên gia tư vấn build PC tại cửa hàng DreamTech. 
-Dưới đây là danh sách sản phẩm đang có trong kho:
+            var systemPrompt = $@"Bạn là chuyên gia tư vấn build PC tại cửa hàng DreamTech.Dưới đây là danh sách sản phẩm đang có trong kho:
 
-{productListJson}
+                {productListJson}
 
-Nhiệm vụ: Dựa vào yêu cầu của khách hàng, hãy gợi ý cấu hình PC phù hợp.
-
-QUY TẮC BẮT BUỘC:
-- CHỈ được chọn sản phẩm có trong danh sách trên (dùng đúng productId).
-- Trả về kết quả theo ĐÚNG format JSON sau, KHÔNG thêm markdown hay text nào khác:
-{{
-  ""components"": [
-    {{""productId"": <id>, ""componentType"": ""CPU"", ""reason"": ""<lý do chọn>""}},
-    {{""productId"": <id>, ""componentType"": ""Mainboard"", ""reason"": ""<lý do chọn>""}},
-    {{""productId"": <id>, ""componentType"": ""RAM"", ""reason"": ""<lý do chọn>""}},
-    {{""productId"": <id>, ""componentType"": ""VGA"", ""reason"": ""<lý do chọn>""}},
-    {{""productId"": <id>, ""componentType"": ""SSD"", ""reason"": ""<lý do chọn>""}},
-    {{""productId"": <id>, ""componentType"": ""PSU"", ""reason"": ""<lý do chọn>""}},
-    {{""productId"": <id>, ""componentType"": ""Case"", ""reason"": ""<lý do chọn>""}},
-    {{""productId"": <id>, ""componentType"": ""Tản nhiệt"", ""reason"": ""<lý do chọn>""}}
-  ],
-  ""totalPrice"": <tổng giá>,
-  ""summary"": ""<tóm tắt cấu hình và nhận xét chung>""
-}}
-- Nếu danh mục nào không có sản phẩm phù hợp, bỏ qua danh mục đó.
-- reason phải ngắn gọn, dễ hiểu, bằng tiếng Việt.
-- Ưu tiên sản phẩm có discountPrice (giá khuyến mãi) nếu có.";
+                Nhiệm vụ: Dựa vào yêu cầu của khách hàng, hãy gợi ý cấu hình PC phù hợp.QUY TẮC BẮT BUỘC:
+                - CHỈ được chọn sản phẩm có trong danh sách trên (dùng đúng productId).- Trả về kết quả theo ĐÚNG format JSON sau, KHÔNG thêm markdown hay text nào khác:
+                {{
+                ""components"": [
+                    {{""productId"": <id>, ""componentType"": ""CPU"", ""reason"": ""<lý do chọn>""}},
+                    {{""productId"": <id>, ""componentType"": ""Mainboard"", ""reason"": ""<lý do chọn>""}},
+                    {{""productId"": <id>, ""componentType"": ""RAM"", ""reason"": ""<lý do chọn>""}},
+                    {{""productId"": <id>, ""componentType"": ""VGA"", ""reason"": ""<lý do chọn>""}},
+                    {{""productId"": <id>, ""componentType"": ""SSD"", ""reason"": ""<lý do chọn>""}},
+                    {{""productId"": <id>, ""componentType"": ""PSU"", ""reason"": ""<lý do chọn>""}},
+                    {{""productId"": <id>, ""componentType"": ""Case"", ""reason"": ""<lý do chọn>""}},
+                    {{""productId"": <id>, ""componentType"": ""Tản nhiệt"", ""reason"": ""<lý do chọn>""}}
+                ],
+                ""totalPrice"": <tổng giá>,
+                ""summary"": ""<tóm tắt cấu hình và nhận xét chung>""
+                }}
+                - Nếu danh mục nào không có sản phẩm phù hợp, bỏ qua danh mục đó.- reason phải ngắn gọn, dễ hiểu, bằng tiếng Việt.- Ưu tiên sản phẩm có discountPrice (giá khuyến mãi) nếu có.";
 
             // 3. Gọi Google Gemini API
             var apiKey = _config["GeminiApi:ApiKey"];
-            var model = _config["GeminiApi:Model"] ?? "gemini-2.0-flash";
-            var url = $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={apiKey}";
+            var modelName = _config["GeminiApi:Model"] ?? "gemini-2.5-flash";
+            var url = $"https://generativelanguage.googleapis.com/v1beta/models/{modelName}:generateContent?key={apiKey}";
 
-            var requestBody = new
+            string responseBody = "";
+            HttpResponseMessage response = null;
+            bool isSuccess = false;
+
+            int maxRetries = 3;
+            for (int attempt = 1; attempt <= maxRetries; attempt++)
             {
-                contents = new[]
+                try
                 {
-                    new
+                    var requestBody = new
                     {
-                        parts = new[]
+                        contents = new[]
                         {
-                            new { text = systemPrompt + "\n\nYêu cầu của khách hàng: " + userPrompt }
+                            new
+                            {
+                                parts = new[]
+                                {
+                                    new { text = systemPrompt + "\n\nYêu cầu của khách hàng: " + userPrompt }
+                                }
+                            }
+                        },
+                        generationConfig = new
+                        {
+                            temperature = 0.2,
+                            maxOutputTokens = 8192,
+                            responseMimeType = "application/json",
+                            responseSchema = new
+                            {
+                                type = "OBJECT",
+                                properties = new
+                                {
+                                    components = new
+                                    {
+                                        type = "ARRAY",
+                                        items = new
+                                        {
+                                            type = "OBJECT",
+                                            properties = new
+                                            {
+                                                productId = new { type = "INTEGER" },
+                                                componentType = new { type = "STRING" },
+                                                reason = new { type = "STRING" }
+                                            },
+                                            required = new[] { "productId", "componentType", "reason" }
+                                        }
+                                    },
+                                    totalPrice = new { type = "NUMBER" },
+                                    summary = new { type = "STRING" }
+                                },
+                                required = new[] { "components", "totalPrice", "summary" }
+                            }
+                        }
+                    };
+
+                    var json = JsonSerializer.Serialize(requestBody);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    response = await _httpClient.PostAsync(url, content);
+                    responseBody = await response.Content.ReadAsStringAsync();
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        isSuccess = true;
+                        break;
+                    }
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable ||
+                        (int)response.StatusCode == 429)
+                    {
+                        if (attempt < maxRetries)
+                        {
+                            await Task.Delay(1000 * attempt);
+                            continue;
                         }
                     }
-                },
-                generationConfig = new
-                {
-                    temperature = 0.2,
-                    maxOutputTokens = 8192,
-                    responseMimeType = "application/json",
-                    responseSchema = new
+                    else
                     {
-                        type = "OBJECT",
-                        properties = new
-                        {
-                            components = new
-                            {
-                                type = "ARRAY",
-                                items = new
-                                {
-                                    type = "OBJECT",
-                                    properties = new
-                                    {
-                                        productId = new { type = "INTEGER" },
-                                        componentType = new { type = "STRING" },
-                                        reason = new { type = "STRING" }
-                                    },
-                                    required = new[] { "productId", "componentType", "reason" }
-                                }
-                            },
-                            totalPrice = new { type = "NUMBER" },
-                            summary = new { type = "STRING" }
-                        },
-                        required = new[] { "components", "totalPrice", "summary" }
+                        break;
                     }
                 }
-            };
+                catch (Exception)
+                {
+                    if (attempt < maxRetries)
+                    {
+                        await Task.Delay(1000 * attempt);
+                        continue;
+                    }
+                }
+            }
 
-            var json = JsonSerializer.Serialize(requestBody);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PostAsync(url, content);
-            var responseBody = await response.Content.ReadAsStringAsync();
-
-            if (!response.IsSuccessStatusCode)
+            if (!isSuccess)
             {
                 throw new Exception($"Gemini API error: {responseBody}");
             }

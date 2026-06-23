@@ -82,6 +82,10 @@ export class UserCart implements OnInit {
           alert('Mã giảm giá đã hết hạn hoặc ngưng hoạt động!');
           return;
         }
+        if (match.usageLimit > 0 && match.usedCount >= match.usageLimit) {
+          alert('Mã giảm giá đã hết lượt sử dụng!');
+          return;
+        }
 
         const subtotal = this.getSubtotal();
         if (subtotal < match.minOrderAmount) {

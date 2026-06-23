@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BE.Services.AiF;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BE.Controller
@@ -17,6 +18,7 @@ namespace BE.Controller
             _aiService = aiService;
         }
 
+        [Authorize]
         [HttpPost("suggest-build")]
         public async Task<IActionResult> SuggestBuild([FromBody] AiSuggestRequest request)
         {

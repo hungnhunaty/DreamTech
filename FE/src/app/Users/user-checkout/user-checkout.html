@@ -39,6 +39,37 @@
                     <option value="Bank Transfer">Chuyển khoản ngân hàng</option>
                 </select>
             </div>
+
+            <!-- Khung chuyển khoản ngân hàng -->
+            <div *ngIf="checkoutForm.get('paymentMethod')?.value === 'Bank Transfer'" 
+                class="mt-4 p-4 bg-slate-900/60 border border-[#00d4ff]/30 rounded-xl space-y-3 animate-fadeIn">
+                <p class="text-xs text-slate-300 font-bold text-center text-[#00d4ff]">QUÉT MÃ QR ĐỂ CHUYỂN KHOẢN</p>
+                <img src="/QrPayment.jpg" class="mx-auto rounded-lg border border-slate-800 max-w-[220px]" alt="QR Code Thanh Toán">
+                
+                <div class="space-y-1.5 text-xs border-t border-slate-800 pt-3 text-slate-300">
+                    <div class="flex justify-between">
+                        <span class="text-[#8888aa]">Ngân hàng:</span>
+                        <span class="font-bold text-white">Vietcombank</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-[#8888aa]">Số tài khoản:</span>
+                        <span class="font-bold text-white">1040406360</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-[#8888aa]">Chủ tài khoản:</span>
+                        <span class="font-bold text-white">NGUYEN ANH KHOA</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-[#8888aa]">Số tiền:</span>
+                        <span class="font-bold text-[#00d4ff] text-sm">{{ getFinalTotal() | number }}₫</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-[#8888aa]">Nội dung:</span>
+                        <span class="font-bold text-[#00d4ff] uppercase">DT {{ checkoutForm.get('phone')?.value || 'THANHTOAN' }}</span>
+                    </div>
+                </div>
+                <p class="text-[10px] text-[#8888aa] text-center italic">* Vui lòng chuyển khoản đúng số tiền và nội dung trước khi bấm xác nhận.</p>
+            </div>
         </form>
     </div>
 
@@ -68,8 +99,8 @@
         </div>
 
         <button (click)="placeOrder()"
-            class="w-full bg-[#00d4ff] text-[#09090f] font-bold py-3 rounded-xl cursor-pointer text-sm mt-2">
-            Đặt Hàng
+            class="w-full bg-[#00d4ff] text-[#09090f] font-bold py-3 rounded-xl cursor-pointer text-sm mt-2 hover:bg-[#00d4ff]/90 transition-all">
+            {{ checkoutForm.get('paymentMethod')?.value === 'Bank Transfer' ? 'Xác Nhận Đã Thanh Toán' : 'Đặt Hàng' }}
         </button>
     </div>
 </div>

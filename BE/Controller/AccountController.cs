@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BE.Dtos;
 using BE.Model;
 using BE.Services.Account;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -24,6 +25,7 @@ namespace BE.Controller
             _accountService = accountService;
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> createAccount(AccountRegisterDto account)
         {
@@ -44,6 +46,7 @@ namespace BE.Controller
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> loginAccount(AccountLoginDto accountLoginDto)
         {
@@ -63,6 +66,7 @@ namespace BE.Controller
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("getUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -70,6 +74,7 @@ namespace BE.Controller
             return Ok(data);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("deleteUser/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {

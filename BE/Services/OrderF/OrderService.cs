@@ -63,7 +63,9 @@ namespace BE.Services.OrderF
 
         public async Task<bool> UpdateOrderStatus(UpdateOrderStatusDto updateOrder)
         {
-            var currentOrder = await _dbContext.Orders.FindAsync(updateOrder.orderId);
+            var currentOrder = await _dbContext.Orders
+                .Include(o => o.Payment)
+                .FirstOrDefaultAsync(o => o.OrderId == updateOrder.orderId);
 
             if (currentOrder is null)
             {
@@ -71,6 +73,21 @@ namespace BE.Services.OrderF
             }
 
             currentOrder.Status = updateOrder.status;
+
+            // Automatically update payment status based on order status changes
+            if (currentOrder.Payment != null)
+            {
+                string statusLower = updateOrder.status.ToLower();
+                if (statusLower == "completed" || statusLower == "processing" || statusLower == "shipping" || statusLower == "approved")
+                {
+                    currentOrder.Payment.Status = "Paid";
+                    currentOrder.Payment.PaidAt = DateTime.UtcNow;
+                }
+                else if (statusLower == "canceled" || statusLower == "cancelled")
+                {
+                    currentOrder.Payment.Status = "Canceled";
+                }
+            }
 
             try
             {
@@ -83,11 +100,65 @@ namespace BE.Services.OrderF
             }
         }
 
-        public async Task<bool> CreateOrder(CreateOrderDto orderDto)
+        public async Task<bool> UpdatePaymentStatus(UpdatePaymentStatusDto updatePayment)
+        {
+            var currentOrder = await _dbContext.Orders
+                .Include(o => o.Payment)
+                .FirstOrDefaultAsync(o => o.OrderId == updatePayment.orderId);
+
+            if (currentOrder is null || currentOrder.Payment is null)
+            {
+                return false;
+            }
+
+            currentOrder.Payment.Status = updatePayment.paymentStatus;
+            if (updatePayment.paymentStatus.Equals("Paid", StringComparison.OrdinalIgnoreCase) ||
+                updatePayment.paymentStatus.Equals("Đã thanh toán", StringComparison.OrdinalIgnoreCase))
+            {
+                currentOrder.Payment.PaidAt = DateTime.UtcNow;
+            }
+            else
+            {
+                currentOrder.Payment.PaidAt = null;
+            }
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<(bool Success, string Message)> CreateOrder(CreateOrderDto orderDto)
         {
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
+                // Cập nhật số lần sử dụng của coupon
+                if (orderDto.CouponId.HasValue && orderDto.CouponId.Value > 0)
+                {
+                    var coupon = await _dbContext.Coupons.FindAsync(orderDto.CouponId.Value);
+                    if (coupon != null)
+                    {
+                        if (coupon.UsageLimit > 0 && coupon.UsedCount >= coupon.UsageLimit)
+                        {
+                            return (false, "Mã giảm giá đã đạt giới hạn sử dụng!");
+                        }
+                        
+                        var now = DateTime.UtcNow;
+                        if (!coupon.IsActive || now < coupon.StartDate || now > coupon.EndDate)
+                        {
+                            return (false, "Mã giảm giá đã hết hạn hoặc không hoạt động!");
+                        }
+
+                        coupon.UsedCount += 1;
+                    }
+                }
+
                 var order = new Order
                 {
                     UserId = orderDto.UserId,
@@ -110,7 +181,7 @@ namespace BE.Services.OrderF
                     var product = await _dbContext.Products.FindAsync(item.ProductId);
                     if (product == null || product.Quantity < item.Quantity)
                     {
-                        throw new Exception("Sản phẩm không đủ hàng trong kho!");
+                        return (false, $"Sản phẩm '{(product != null ? product.Name : "không xác định")}' không đủ hàng trong kho!");
                     }
 
                     product.Quantity -= item.Quantity; // Deduct quantity
@@ -131,19 +202,19 @@ namespace BE.Services.OrderF
                     OrderId = order.OrderId,
                     Amount = orderDto.TotalAmount,
                     Method = orderDto.PaymentMethod,
-                    Status = "Unpaid",
+                    Status = orderDto.PaymentMethod == "Bank Transfer" ? "Chờ xác nhận" : "Unpaid",
                     PaidAt = null
                 };
                 await _dbContext.Payments.AddAsync(payment);
 
                 await _dbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
-                return true;
+                return (true, "Đặt hàng thành công!");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                return false;
+                return (false, ex.Message);
             }
         }
 

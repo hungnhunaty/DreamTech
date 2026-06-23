@@ -62,8 +62,6 @@ builder.Services.AddScoped<ReviewService>();
 builder.Services.AddScoped<AiService>();
 builder.Services.AddHttpClient();
 
-
-builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BE.Dtos;
 using BE.Services.ReviewF;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BE.Controller
@@ -19,6 +20,7 @@ namespace BE.Controller
             _reviewService = reviewService;
         }
 
+        [AllowAnonymous]
         [HttpGet("getReviews")]
         public async Task<IActionResult> GetAllReviews()
         {
@@ -26,6 +28,7 @@ namespace BE.Controller
             return Ok(data);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("deleteReview/{id}")]
         public async Task<IActionResult> DeleteReview(int id)
         {
@@ -37,6 +40,7 @@ namespace BE.Controller
             return Ok(new {message = "Xóa đánh giá thành công"});
         }
 
+        [AllowAnonymous]
         [HttpGet("getReviewsByProduct/{productId}")]
         public async Task<IActionResult> GetReviewsByProduct(int productId)
         {
@@ -44,6 +48,7 @@ namespace BE.Controller
             return Ok(data);
         }
 
+        [Authorize]
         [HttpPost("addReview")]
         public async Task<IActionResult> AddReview(AddReviewDto reviewDto)
         {

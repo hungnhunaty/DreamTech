@@ -19,6 +19,10 @@ export class OrderService {
     return this.http.put<any>(`${this.url}/updateStatus`, data);
   }
 
+  updatePaymentStatus(data:any):Observable<any>{
+    return this.http.put<any>(`${this.url}/updatePaymentStatus`, data);
+  }
+
   createOrder(data:any):Observable<any>{
     return this.http.post<any>(`${this.url}/createOrder`, data);
   }

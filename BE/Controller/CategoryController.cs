@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BE.Dtos;
 using BE.Services.CategoryF;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -21,6 +22,7 @@ namespace BE.Controller
             _categoryService = categoryService;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost("addCategory")]
         public async Task<IActionResult> AddNewCategory(AddCategoryDto newCategory)
         {
@@ -32,6 +34,7 @@ namespace BE.Controller
             return Ok(new {message = "Thêm danh mục thành công"});
         }
 
+        [AllowAnonymous]
         [HttpGet("getCategory")]
         public async Task<IActionResult> GetAllCategories()
         {
@@ -39,6 +42,7 @@ namespace BE.Controller
             return Ok(data);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("deleteCategory/{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
@@ -50,6 +54,7 @@ namespace BE.Controller
             return Ok(new {message = "Xóa danh mục thành công"});
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("updateCategory")]
         public async Task<IActionResult> UpdateCategory(UpdateCategoryDto updateCategory)
         {

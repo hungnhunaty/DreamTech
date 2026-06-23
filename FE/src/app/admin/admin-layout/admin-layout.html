@@ -8,64 +8,70 @@
         </div>
 
         <nav class="flex-1 px-4 space-y-3 mt-5">
-            <p class="text-[10px] text-[#555570] font-bold tracking-[0.15em] uppercase px-2 mb-2">Menu</p>        
-            
+            <p class="text-[10px] text-[#555570] font-bold tracking-[0.15em] uppercase px-2 mb-2">Menu</p>
+
             <button class="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
-                              text-[#8888aa] hover:bg-[#1a1a2a]  border border-transparent" routerLink="/admin/dashboard" routerLinkActive="!bg-[#00d4ff]/10 !text-[#00d4ff] !border !border-[#00d4ff]/20 is-active">
-                              <img src="general.png" class="w-8 h-8"><span class="whitespace-nowrap">Tổng quan</span><span class="ml-auto w-1.5 h-1.5 rounded-full bg-[#00d4ff] opacity-0 group-[.is-active]:opacity-100"></span>
+                              text-[#8888aa] hover:bg-[#1a1a2a]  border border-transparent"
+                routerLink="/admin/dashboard"
+                routerLinkActive="!bg-[#00d4ff]/10 !text-[#00d4ff] !border !border-[#00d4ff]/20 is-active">
+                <img src="general.png" class="w-8 h-8"><span class="whitespace-nowrap">Tổng quan</span><span
+                    class="ml-auto w-1.5 h-1.5 rounded-full bg-[#00d4ff] opacity-0 group-[.is-active]:opacity-100"></span>
+            </button>
+
+            <button class="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                              text-[#8888aa] hover:bg-[#1a1a2a]  border border-transparent" routerLink="/admin/product"
+                routerLinkActive="!bg-[#00d4ff]/10 !text-[#00d4ff] !border !border-[#00d4ff]/20 is-active">
+                <img src="product.png" class="w-8 h-8"><span class="whitespace-nowrap">Sản phẩm</span><span
+                    class="ml-auto w-1.5 h-1.5 rounded-full bg-[#00d4ff] opacity-0 group-[.is-active]:opacity-100"></span>
+            </button>
+
+            <button class="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                              text-[#8888aa] hover:bg-[#1a1a2a]  border border-transparent" routerLink="/admin/order"
+                routerLinkActive="!bg-[#00d4ff]/10 !text-[#00d4ff] !border !border-[#00d4ff]/20 is-active">
+                <img src="order.png" class="w-8 h-8"><span class="whitespace-nowrap">Đơn hàng</span><span
+                    class="ml-auto w-1.5 h-1.5 rounded-full bg-[#00d4ff] opacity-0 group-[.is-active]:opacity-100"></span>
             </button>
 
             <button class="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
                               text-[#8888aa] hover:bg-[#1a1a2a]  border border-transparent"
-                    routerLink="/admin/product"
-                    routerLinkActive="!bg-[#00d4ff]/10 !text-[#00d4ff] !border !border-[#00d4ff]/20 is-active">
-                              <img src="product.png" class="w-8 h-8"><span class="whitespace-nowrap">Sản phẩm</span><span class="ml-auto w-1.5 h-1.5 rounded-full bg-[#00d4ff] opacity-0 group-[.is-active]:opacity-100"></span>
+                routerLink="/admin/category"
+                routerLinkActive="!bg-[#00d4ff]/10 !text-[#00d4ff] !border !border-[#00d4ff]/20 is-active">
+                <img src="category.png" class="w-8 h-8"><span class="whitespace-nowrap">Danh mục</span><span
+                    class="ml-auto w-1.5 h-1.5 rounded-full bg-[#00d4ff] opacity-0 group-[.is-active]:opacity-100"></span>
+            </button>
+
+            <button class="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                              text-[#8888aa] hover:bg-[#1a1a2a]  border border-transparent" routerLink="/admin/account"
+                routerLinkActive="!bg-[#00d4ff]/10 !text-[#00d4ff] !border !border-[#00d4ff]/20 is-active">
+                <img src="user1.png" class="w-8 h-8"><span class="whitespace-nowrap">Tài khoản</span><span
+                    class="ml-auto w-1.5 h-1.5 rounded-full bg-[#00d4ff] opacity-0 group-[.is-active]:opacity-100"></span>
             </button>
 
             <button class="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
                               text-[#8888aa] hover:bg-[#1a1a2a]  border border-transparent"
-                    routerLink="/admin/order"
-                    routerLinkActive="!bg-[#00d4ff]/10 !text-[#00d4ff] !border !border-[#00d4ff]/20 is-active">
-                              <img src="order.png" class="w-8 h-8"><span class="whitespace-nowrap">Đơn hàng</span><span class="ml-auto w-1.5 h-1.5 rounded-full bg-[#00d4ff] opacity-0 group-[.is-active]:opacity-100"></span>
+                routerLink="/admin/discount"
+                routerLinkActive="!bg-[#00d4ff]/10 !text-[#00d4ff] !border !border-[#00d4ff]/20 is-active">
+                <img src="voucher.png" class="w-8 h-8"><span class="whitespace-nowrap">Khuyến mãi</span><span
+                    class="ml-auto w-1.5 h-1.5 rounded-full bg-[#00d4ff] opacity-0 group-[.is-active]:opacity-100"></span>
             </button>
 
             <button class="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
-                              text-[#8888aa] hover:bg-[#1a1a2a]  border border-transparent"
-                    routerLink="/admin/category"
-                    routerLinkActive="!bg-[#00d4ff]/10 !text-[#00d4ff] !border !border-[#00d4ff]/20 is-active">
-                              <img src="category.png" class="w-8 h-8"><span class="whitespace-nowrap">Danh mục</span><span class="ml-auto w-1.5 h-1.5 rounded-full bg-[#00d4ff] opacity-0 group-[.is-active]:opacity-100"></span>
-            </button>
-
-            <button class="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
-                              text-[#8888aa] hover:bg-[#1a1a2a]  border border-transparent"
-                    routerLink="/admin/account"
-                    routerLinkActive="!bg-[#00d4ff]/10 !text-[#00d4ff] !border !border-[#00d4ff]/20 is-active">
-                              <img src="user1.png" class="w-8 h-8"><span class="whitespace-nowrap">Tài khoản</span><span class="ml-auto w-1.5 h-1.5 rounded-full bg-[#00d4ff] opacity-0 group-[.is-active]:opacity-100"></span>
-            </button>
-
-            <button class="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
-                              text-[#8888aa] hover:bg-[#1a1a2a]  border border-transparent"
-                    routerLink="/admin/discount"
-                    routerLinkActive="!bg-[#00d4ff]/10 !text-[#00d4ff] !border !border-[#00d4ff]/20 is-active">
-                              <img src="voucher.png" class="w-8 h-8"><span class="whitespace-nowrap">Khuyến mãi</span><span class="ml-auto w-1.5 h-1.5 rounded-full bg-[#00d4ff] opacity-0 group-[.is-active]:opacity-100"></span>
-            </button>
-
-            <button class="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
-                              text-[#8888aa] hover:bg-[#1a1a2a]  border border-transparent"
-                    routerLink="/admin/rating"
-                    routerLinkActive="!bg-[#00d4ff]/10 !text-[#00d4ff] !border !border-[#00d4ff]/20 is-active">
-                              <img src="rating.png" class="w-8 h-8"><span class="whitespace-nowrap">Đánh giá</span><span class="ml-auto w-1.5 h-1.5 rounded-full bg-[#00d4ff] opacity-0 group-[.is-active]:opacity-100"></span>
+                              text-[#8888aa] hover:bg-[#1a1a2a]  border border-transparent" routerLink="/admin/rating"
+                routerLinkActive="!bg-[#00d4ff]/10 !text-[#00d4ff] !border !border-[#00d4ff]/20 is-active">
+                <img src="rating.png" class="w-8 h-8"><span class="whitespace-nowrap">Đánh giá</span><span
+                    class="ml-auto w-1.5 h-1.5 rounded-full bg-[#00d4ff] opacity-0 group-[.is-active]:opacity-100"></span>
             </button>
 
 
         </nav>
 
         <div class="flex items-center px-4 py-2 border-t border-white/20">
-            <button class="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
-                              text-[#8888aa] hover:bg-red-600/30 hover:text-red-500 border border-transparent"><img src="logout.png" class="w-8 h-8">Đăng xuất</button>
+            <button (click)="logout()" class="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                              text-[#8888aa] hover:bg-red-600/30 hover:text-red-500 border border-transparent"><img
+                    src="logout.png" class="w-8 h-8">Đăng xuất</button>
         </div>
     </aside>
-        <div class="flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col">
         <app-admin-header></app-admin-header>
 
         <main class="flex-1">
@@ -73,8 +79,5 @@
                 <router-outlet></router-outlet>
             </div>
         </main>
-        </div>
+    </div>
 </div>
-
-
-

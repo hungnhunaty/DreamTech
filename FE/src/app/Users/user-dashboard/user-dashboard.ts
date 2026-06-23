@@ -28,7 +28,7 @@ export class UserDashboard implements OnInit {
     private reviewService: ReviewService,
     private router: Router,
     private cd: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     const userInfo = localStorage.getItem('userInfo');

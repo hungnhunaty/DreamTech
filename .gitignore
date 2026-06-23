@@ -1,0 +1,119 @@
+# ==========================================
+# DreamTech Project .gitignore
+# Supports: ASP.NET Core (BE) & Angular (FE)
+# ==========================================
+
+# ------------------------------------------
+# 1. OS & System Files
+# ------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ------------------------------------------
+# 2. IDEs & Editors
+# ------------------------------------------
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Visual Studio
+.vs/
+[Dd]ebug/
+[Dd]ebugPS/
+[Rr]elease/
+[Rr]eleasePS/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Log]/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.userprefs
+
+# JetBrains Rider / WebStorm
+.idea/
+*.sln.iml
+*.suo
+*.user
+*.userosscache
+
+# ------------------------------------------
+# 3. Backend (BE) - .NET Core / C#
+# ------------------------------------------
+# Build results
+BE/bin/
+BE/obj/
+BE/[Dd]ebug/
+BE/[Rr]elease/
+
+# Publish output
+BE/publish/
+
+# User-specific files
+BE/*.user
+BE/*.userosscache
+BE/*.suo
+
+# Local configuration overrides (uncomment if you want to ignore them)
+# BE/appsettings.Development.json
+
+# EF Core Migrations / SQLite (if any local DB is used)
+*.db
+*.db-shm
+*.db-wal
+
+# ------------------------------------------
+# 4. Frontend (FE) - Node / Angular
+# ------------------------------------------
+# Dependency directories
+FE/node_modules/
+FE/jspm_packages/
+
+# Compiled output
+FE/dist/
+FE/tmp/
+FE/out-tsc/
+FE/bazel-out/
+
+# Angular cache
+FE/.angular/
+
+# Log files
+FE/npm-debug.log*
+FE/yarn-debug.log*
+FE/yarn-error.log*
+FE/pnpm-debug.log*
+
+# Editorconfig & Typings
+FE/typings/
+FE/.sass-cache/
+FE/connect.lock
+FE/coverage/
+FE/libpeerconnection.log
+FE/testem.log
+FE/__screenshots__/
+
+# ------------------------------------------
+# 5. Environment Variables / Secrets
+# ------------------------------------------
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AdminHeader } from '../admin-header/admin-header';
 
 @Component({
@@ -9,5 +9,11 @@ import { AdminHeader } from '../admin-header/admin-header';
   styleUrl: './admin-layout.css',
 })
 export class AdminLayout {
+  constructor(private router: Router) { }
 
+  logout() {
+    localStorage.removeItem('userInfo');
+    alert("Đăng xuất thành công!");
+    this.router.navigate(['/login']);
+  }
 }

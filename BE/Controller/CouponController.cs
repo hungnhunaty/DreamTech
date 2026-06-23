@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BE.Dtos;
 using BE.Services.CouponF;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BE.Controller
@@ -19,6 +20,7 @@ namespace BE.Controller
             _couponService = couponService;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost("addCoupon")]
         public async Task<IActionResult> AddNewCoupon(AddCouponDto newCoupon)
         {
@@ -30,6 +32,7 @@ namespace BE.Controller
             return Ok(new {message = "Thêm mã khuyến mãi thành công"});
         }
 
+        [AllowAnonymous]
         [HttpGet("getCoupons")]
         public async Task<IActionResult> GetAllCoupons()
         {
@@ -37,6 +40,7 @@ namespace BE.Controller
             return Ok(data);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("deleteCoupon/{id}")]
         public async Task<IActionResult> DeleteCoupon(int id)
         {
@@ -48,6 +52,7 @@ namespace BE.Controller
             return Ok(new {message = "Xóa mã khuyến mãi thành công"});
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("updateCoupon")]
         public async Task<IActionResult> UpdateCoupon(UpdateCouponDto updateCoupon)
         {

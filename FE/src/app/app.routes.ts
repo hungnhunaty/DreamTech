@@ -17,6 +17,7 @@ import { AdminDiscount } from './admin/admin-discount/admin-discount';
 import { AdminOrder } from './admin/admin-order/admin-order';
 import { AdminProduct } from './admin/admin-product/admin-product';
 import { AdminRating } from './admin/admin-rating/admin-rating';
+import { authGuard, adminGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     {path: "", redirectTo:"home", pathMatch:"full"},
@@ -30,8 +31,8 @@ export const routes: Routes = [
     {path: "register", component:Register},
     {path: "login", component:Login},
 
-    //User Route Config
-    {path: "user", component:User, 
+    //User Route Config - Yêu cầu đăng nhập
+    {path: "user", component:User, canActivate: [authGuard],
         children:[
             {path: "", redirectTo:"shop", pathMatch:"full"},
             {path: "shop", component:UserShop},
@@ -42,8 +43,8 @@ export const routes: Routes = [
         ]
     },
 
-    //Admin Route Config
-    {path: "admin", component: AdminLayout,
+    //Admin Route Config - Yêu cầu quyền Admin
+    {path: "admin", component: AdminLayout, canActivate: [adminGuard],
         children:[
             {path: 'dashboard', component: AdminDashboard, data: {title: "Tổng quan"}},
             {path: 'account', component: AdminAccount, data: {title: "Quản lý tài khoản"}},
