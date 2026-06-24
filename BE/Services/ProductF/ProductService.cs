@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BE.Dtos;
-using BE.Model;
-using Humanizer;
-using Microsoft.EntityFrameworkCore;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 
 namespace BE.Services.ProductF
 {
@@ -14,18 +8,53 @@ namespace BE.Services.ProductF
         private readonly AppDbContext _dbContext;
         private readonly IWebHostEnvironment _env;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly Cloudinary? _cloudinary;
 
-        public ProductService(AppDbContext dbContext, IWebHostEnvironment env, IHttpContextAccessor httpContextAccessor)
+        public ProductService(
+            AppDbContext dbContext, 
+            IWebHostEnvironment env, 
+            IHttpContextAccessor httpContextAccessor,
+            Cloudinary? cloudinary = null)
         {
             _dbContext = dbContext;
             _env = env;
             _httpContextAccessor = httpContextAccessor;
+            _cloudinary = cloudinary;
         }
 
         private string GetBaseUrl()
         {
             var request = _httpContextAccessor.HttpContext?.Request;
             return $"{request?.Scheme}://{request?.Host}";
+        }
+
+        private async Task<string> UploadImageAsync(IFormFile file)
+        {
+            if (_cloudinary != null)
+            {
+                using var stream = file.OpenReadStream();
+                var uploadParams = new ImageUploadParams
+                {
+                    File = new FileDescription(file.FileName, stream),
+                    Folder = "dreamtech_products"
+                };
+
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                if (uploadResult?.SecureUrl != null)
+                {
+                    return uploadResult.SecureUrl.ToString();
+                }
+            }
+
+            // Fallback to local disk if Cloudinary is not configured
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(_env.WebRootPath, "images", "products", fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            return $"{GetBaseUrl()}/images/products/{fileName}";
         }
 
         public async Task<bool> AddProductAsync(AddProductDto newProduct)
@@ -39,14 +68,7 @@ namespace BE.Services.ProductF
             string imageUrl = "";
             if (newProduct.Image != null)
             {
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(newProduct.Image.FileName);
-                var filePath = Path.Combine(_env.WebRootPath, "images", "products", fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await newProduct.Image.CopyToAsync(stream);
-                }
-                imageUrl = $"{GetBaseUrl()}/images/products/{fileName}";
+                imageUrl = await UploadImageAsync(newProduct.Image);
             }
 
             var addProduct = new Product
@@ -141,14 +163,7 @@ namespace BE.Services.ProductF
 
             if (updateProduct.Image != null)
             {
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(updateProduct.Image.FileName);
-                var filePath = Path.Combine(_env.WebRootPath, "images", "products", fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await updateProduct.Image.CopyToAsync(stream);
-                }
-                currentProduct.ImageUrl = $"{GetBaseUrl()}/images/products/{fileName}";
+                currentProduct.ImageUrl = await UploadImageAsync(updateProduct.Image);
             }
 
             currentProduct.CategoryId = updateProduct.categoryId;
