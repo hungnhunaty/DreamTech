@@ -74,21 +74,6 @@ namespace BE.Services.OrderF
 
             currentOrder.Status = updateOrder.status;
 
-            // Automatically update payment status based on order status changes
-            if (currentOrder.Payment != null)
-            {
-                string statusLower = updateOrder.status.ToLower();
-                if (statusLower == "completed" || statusLower == "processing" || statusLower == "shipping" || statusLower == "approved")
-                {
-                    currentOrder.Payment.Status = "Paid";
-                    currentOrder.Payment.PaidAt = DateTime.UtcNow;
-                }
-                else if (statusLower == "canceled" || statusLower == "cancelled")
-                {
-                    currentOrder.Payment.Status = "Canceled";
-                }
-            }
-
             try
             {
                 await _dbContext.SaveChangesAsync();
