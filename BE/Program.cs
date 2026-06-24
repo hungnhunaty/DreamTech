@@ -85,7 +85,7 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-using(var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
@@ -94,7 +94,7 @@ using(var scope = app.Services.CreateScope())
 
         await accountService.SeedAdminAsync();
     }
-    catch(Exception ex)
+    catch (Exception ex)
     {
         Console.WriteLine("Error while seeding Admin: " + ex.Message);
     }
