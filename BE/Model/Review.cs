@@ -13,6 +13,7 @@ namespace BE.Model
         public int ReviewId { get; set; }
         public int UserId { get; set; }
         public int ProductId { get; set; }
+        public int? OrderId { get; set; }
 
         [Required]
         [Range(1, 5)]
@@ -28,5 +29,8 @@ namespace BE.Model
 
         [ForeignKey("ProductId")]
         public Product Product { get; set; }
+
+        [ForeignKey("OrderId")]
+        public Order? Order { get; set; }
     }
 }

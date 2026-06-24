@@ -77,17 +77,37 @@ namespace BE.Services.ReviewF
 
         public async Task<bool> AddReview(AddReviewDto reviewDto)
         {
-            var hasOrdered = await _dbContext.Orders
-                .AnyAsync(o => o.UserId == reviewDto.UserId && o.OrderDetails.Any(d => d.ProductId == reviewDto.ProductId));
-            if (!hasOrdered)
+            if (reviewDto.OrderId.HasValue)
             {
-                throw new InvalidOperationException("Bạn chỉ có thể đánh giá sản phẩm sau khi đã mua hàng!");
+                var orderExists = await _dbContext.Orders
+                    .AnyAsync(o => o.OrderId == reviewDto.OrderId.Value && o.UserId == reviewDto.UserId && o.OrderDetails.Any(d => d.ProductId == reviewDto.ProductId));
+                if (!orderExists)
+                {
+                    throw new InvalidOperationException("Bạn chỉ có thể đánh giá sản phẩm có trong đơn hàng của mình!");
+                }
+
+                var alreadyReviewed = await _dbContext.Reviews
+                    .AnyAsync(r => r.OrderId == reviewDto.OrderId.Value && r.ProductId == reviewDto.ProductId);
+                if (alreadyReviewed)
+                {
+                    throw new InvalidOperationException("Bạn đã đánh giá sản phẩm này cho đơn hàng này rồi!");
+                }
+            }
+            else
+            {
+                var hasOrdered = await _dbContext.Orders
+                    .AnyAsync(o => o.UserId == reviewDto.UserId && o.OrderDetails.Any(d => d.ProductId == reviewDto.ProductId));
+                if (!hasOrdered)
+                {
+                    throw new InvalidOperationException("Bạn chỉ có thể đánh giá sản phẩm sau khi đã mua hàng!");
+                }
             }
 
             var review = new Review
             {
                 UserId = reviewDto.UserId,
                 ProductId = reviewDto.ProductId,
+                OrderId = reviewDto.OrderId,
                 Rating = reviewDto.Rating,
                 Comment = reviewDto.Comment,
                 CreatedAt = DateTime.UtcNow

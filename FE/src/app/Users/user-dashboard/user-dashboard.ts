@@ -115,6 +115,7 @@ export class UserDashboard implements OnInit {
     const payload = {
       userId: this.userId,
       productId: this.selectedProductToReview.productId,
+      orderId: this.selectedOrder.orderId,
       rating: this.newRating,
       comment: this.newComment
     };
@@ -122,6 +123,14 @@ export class UserDashboard implements OnInit {
     this.reviewService.addReview(payload).subscribe({
       next: () => {
         alert('Đánh giá sản phẩm thành công! Cảm ơn ý kiến của bạn.');
+        
+        const reviewedItem = this.orderItems.find(
+          (item: any) => item.productId === this.selectedProductToReview.productId
+        );
+        if (reviewedItem) {
+          reviewedItem.isReviewed = true;
+        }
+
         this.selectedProductToReview = null;
         this.newComment = '';
         this.newRating = 5;

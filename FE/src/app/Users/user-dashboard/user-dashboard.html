@@ -107,11 +107,18 @@
                             <h4 class="text-sm font-semibold text-white line-clamp-1">{{item.productName}}</h4>
                             <p class="text-xs text-[#8888aa]">Số lượng: {{item.quantity}} | Đơn giá: {{item.unitPrice | number}}₫</p>
                         </div>
-                        <button *ngIf="selectedProductToReview?.productId !== item.productId"
-                            (click)="selectProductForReview(item)"
-                            class="bg-[#00d4ff] text-[#09090f] font-bold text-xs px-3 py-1.5 rounded-lg cursor-pointer">
-                            Viết đánh giá
-                        </button>
+                        <ng-container *ngIf="item.isReviewed; else reviewBtn">
+                            <span class="text-xs text-green-400 bg-green-500/10 border border-green-500/20 px-3 py-1.5 rounded-lg font-semibold">
+                                Đã đánh giá
+                            </span>
+                        </ng-container>
+                        <ng-template #reviewBtn>
+                            <button *ngIf="selectedProductToReview?.productId !== item.productId"
+                                (click)="selectProductForReview(item)"
+                                class="bg-[#00d4ff] hover:bg-[#00d4ff]/90 text-[#09090f] font-bold text-xs px-3 py-1.5 rounded-lg cursor-pointer transition-all">
+                                Viết đánh giá
+                            </button>
+                        </ng-template>
                     </div>
 
                     <!-- Review Input Form for this item -->

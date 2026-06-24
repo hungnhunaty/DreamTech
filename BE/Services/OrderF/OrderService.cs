@@ -219,7 +219,8 @@ namespace BE.Services.OrderF
                     d.Product.Name,
                     d.Product.ImageUrl,
                     d.Quantity,
-                    d.UnitPrice
+                    d.UnitPrice,
+                    _dbContext.Reviews.Any(r => r.OrderId == orderId && r.ProductId == d.ProductId)
                 ))
                 .ToListAsync();
         }

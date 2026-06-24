@@ -5,5 +5,6 @@ public record GetOrderDetailDto(
     string productName,
     string imageUrl,
     int quantity,
-    decimal unitPrice
+    decimal unitPrice,
+    bool isReviewed
 );
