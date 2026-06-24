@@ -66,8 +66,11 @@ namespace BE.Services.AiF
                 - Nếu danh mục nào không có sản phẩm phù hợp, bỏ qua danh mục đó.- reason phải ngắn gọn, dễ hiểu, bằng tiếng Việt.- Ưu tiên sản phẩm có discountPrice (giá khuyến mãi) nếu có.";
 
             // 3. Gọi Google Gemini API
-            var apiKey = _config["GeminiApi:ApiKey"];
-            var modelName = _config["GeminiApi:Model"] ?? "gemini-2.5-flash";
+            var apiKey = Environment.GetEnvironmentVariable("GEMINI_API_KEY") 
+                ?? _config["GeminiApi:ApiKey"];
+            var modelName = Environment.GetEnvironmentVariable("GEMINI_MODEL")
+                ?? _config["GeminiApi:Model"] 
+                ?? "gemini-2.5-flash";
             var url = $"https://generativelanguage.googleapis.com/v1beta/models/{modelName}:generateContent?key={apiKey}";
 
             string responseBody = "";
