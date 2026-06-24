@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AddCategoryDto } from '../../Dtos/AddCategoryDto';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
-  url:string = `http://localhost:5149/api/category`;
+  url:string = `${environment.apiUrl}/category`;
 
   constructor(private route:Router, private http: HttpClient){}
   

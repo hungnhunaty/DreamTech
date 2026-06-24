@@ -13,11 +13,19 @@ namespace BE.Services.ProductF
     {
         private readonly AppDbContext _dbContext;
         private readonly IWebHostEnvironment _env;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ProductService(AppDbContext dbContext, IWebHostEnvironment env)
+        public ProductService(AppDbContext dbContext, IWebHostEnvironment env, IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
             _env = env;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        private string GetBaseUrl()
+        {
+            var request = _httpContextAccessor.HttpContext?.Request;
+            return $"{request?.Scheme}://{request?.Host}";
         }
 
         public async Task<bool> AddProductAsync(AddProductDto newProduct)
@@ -38,7 +46,7 @@ namespace BE.Services.ProductF
                 {
                     await newProduct.Image.CopyToAsync(stream);
                 }
-                imageUrl = "http://localhost:5149/images/products/" + fileName;
+                imageUrl = $"{GetBaseUrl()}/images/products/{fileName}";
             }
 
             var addProduct = new Product
@@ -125,7 +133,7 @@ namespace BE.Services.ProductF
                 {
                     await updateProduct.Image.CopyToAsync(stream);
                 }
-                currentProduct.ImageUrl = "http://localhost:5149/images/products/" + fileName;
+                currentProduct.ImageUrl = $"{GetBaseUrl()}/images/products/{fileName}";
             }
 
             currentProduct.CategoryId = updateProduct.categoryId;

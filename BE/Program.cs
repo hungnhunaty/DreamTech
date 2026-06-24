@@ -16,18 +16,29 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Read allowed origins from environment variable or fallback to localhost
+var allowedOrigins = builder.Configuration["AllowedOrigins"]
+    ?? Environment.GetEnvironmentVariable("ALLOWED_ORIGINS")
+    ?? "http://localhost:4200";
+
 builder.Services.AddCors(opt =>
 {
     opt.AddPolicy("CorsPolicy", policy =>
     {
-        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
+        policy.AllowAnyHeader()
+              .AllowAnyMethod()
+              .WithOrigins(allowedOrigins.Split(',', StringSplitOptions.RemoveEmptyEntries));
     });
 });
 
 
+// Use connection string from environment variable if available, otherwise fallback to appsettings
+var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
+    ?? builder.Configuration.GetConnectionString("ConStr");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConStr"));
+    options.UseSqlServer(connectionString);
 });
 
 builder.Services.AddAuthentication(options =>
@@ -37,19 +48,27 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    var jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY")
+        ?? builder.Configuration["JWTConfig:SecretKey"]!;
+    var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER")
+        ?? builder.Configuration["JWTConfig:Issuer"];
+    var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE")
+        ?? builder.Configuration["JWTConfig:Audience"];
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["JWTConfig:Issuer"],
-        ValidAudience = builder.Configuration["JWTConfig:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTConfig:SecretKey"]!)),
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey)),
         RoleClaimType = "Role"
     };
 });
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<TokenProvider>();

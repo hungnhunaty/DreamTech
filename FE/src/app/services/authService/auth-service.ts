@@ -5,6 +5,7 @@ import { AccountRegisterDto } from '../../Dtos/AccountRegisterDto';
 import { AccountLoginDto } from '../../Dtos/AccountLoginDto';
 import { Observable } from 'rxjs';
 import { LoginResponseDto } from '../../Dtos/LoginResponseDto';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class AuthService {
 
   }
 
-  url:string = `http://localhost:5149/api/account`;
+  url:string = `${environment.apiUrl}/account`;
 
   register(data: AccountRegisterDto) : Observable<any>{
     return this.http.post<any>(`${this.url}/register`, data);

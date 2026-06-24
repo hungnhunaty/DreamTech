@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AiService {
-  url: string = 'http://localhost:5149/api/ai';
+  url: string = `${environment.apiUrl}/ai`;
 
   constructor(private http: HttpClient) {}
 
