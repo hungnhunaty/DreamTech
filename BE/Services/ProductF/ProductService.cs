@@ -72,11 +72,26 @@ namespace BE.Services.ProductF
             }
         }
 
+        private string NormalizeImageUrl(string? imageUrl)
+        {
+            if (string.IsNullOrEmpty(imageUrl)) return "";
+            
+            // Nếu ảnh cũ lưu dạng localhost:5149, chuyển thành URL của Render hiện tại
+            if (imageUrl.Contains("localhost:5149"))
+            {
+                return imageUrl.Replace("http://localhost:5149", GetBaseUrl());
+            }
+            
+            return imageUrl;
+        }
+
         public async Task<List<GetProductDto>> GetAllProducts()
         {
-            var data = await _dbContext.Products
+            var products = await _dbContext.Products
                         .Include(p => p.Category)
-                        .Select(p => new GetProductDto(
+                        .ToListAsync();
+
+            var data = products.Select(p => new GetProductDto(
                             p.ProductId,
                             p.CategoryId,
                             p.Name,
@@ -86,11 +101,11 @@ namespace BE.Services.ProductF
                             p.DiscountPrice,
                             p.Quantity,
                             p.Brand,
-                            p.ImageUrl,
+                            NormalizeImageUrl(p.ImageUrl),
                             p.IsActive,
                             p.CreatedAt
                         ))
-                        .ToListAsync();
+                        .ToList();
 
             return data;
         }
